@@ -1,0 +1,14 @@
+# Secretos: nunca al repositorio
+.env
+.env.*
+!.env.example
+
+# Datos pesados: se regeneran con data-pipeline/
+datos/*.tif
+datos/planetas/diviner/
+datos/planetas/*.img
+
+# Entornos y dependencias
+node_modules/
+__pycache__/
+.venv/
