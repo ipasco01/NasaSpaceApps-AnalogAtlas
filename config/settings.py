@@ -30,14 +30,16 @@ COLUMNAS_CELDAS: List[str] = [
     "permafrost_proxy", "polvo",
 ]
 
+# Igual que backend/motor.py PESOS_BASE (v0.2). Si cambian allá, cambiar aquí.
 PESOS_BASE: Dict[str, Dict[str, float]] = {
     "marte": {
-        "lluvia": 0.20, "ndvi": 0.20, "arido": 0.15, "rango_termico": 0.15,
-        "temp_noche": 0.10, "pendiente": 0.10, "polvo": 0.10,
+        "lluvia": 0.15, "ndvi": 0.15, "arido": 0.15, "rango_termico": 0.15,
+        "temp_noche": 0.10, "temp_dia": 0.10, "pendiente": 0.10, "polvo": 0.10,
     },
     "luna": {
-        "lluvia": 0.15, "ndvi": 0.15, "arido": 0.15, "rango_termico": 0.20,
-        "temp_noche": 0.15, "pendiente": 0.10, "hielo": 0.10,
+        "lluvia": 0.10, "ndvi": 0.10, "arido": 0.10, "rango_termico": 0.15,
+        "temp_noche": 0.15, "temp_dia": 0.15, "pendiente": 0.10, "hielo": 0.05,
+        "permafrost_proxy": 0.10,
     },
 }
 

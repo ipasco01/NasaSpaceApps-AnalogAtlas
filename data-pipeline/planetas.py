@@ -23,7 +23,7 @@ RELIEVE = {
              "fuente": "LOLA LDEM_4 4 px/° (LRO, PDS Geosciences)"},
 }
 PX_POR_GRADO = 4
-LAT_POLO_NO_FIABLE = 85  # cerca del polo esta proyección deforma la pendiente
+LAT_SOLO_NORTE_SUR = 80.0  # misma regla que tif_a_tabla.py para la Tierra
 
 
 def leer_relieve(cuerpo: str) -> np.ndarray:
@@ -39,6 +39,9 @@ def pendiente_grados(relieve_m: np.ndarray, radio_km: float) -> np.ndarray:
     lat = 90 - (np.arange(720) + 0.5) / PX_POR_GRADO
     dx = paso * np.maximum(np.cos(np.radians(lat)), 1e-3)[:, None]  # metros por celda en longitud
     dz_dy, dz_dx = np.gradient(relieve_m, paso, axis=0), np.gradient(relieve_m, axis=1) / dx
+    # Misma regla que tif_a_tabla.py para la Tierra: sobre LAT_SOLO_NORTE_SUR solo la componente norte-sur
+    # (las celdas se angostan de este a oeste y dz_dx se dispara). Es un mínimo de la pendiente real.
+    dz_dx = np.where((np.abs(lat) > LAT_SOLO_NORTE_SUR)[:, None], 0.0, dz_dx)
     return np.degrees(np.arctan(np.hypot(dz_dx, dz_dy)))
 
 
@@ -55,8 +58,8 @@ def main() -> None:
         cuerpo = ref["cuerpo"]
         valor = round(valor_en(pendientes[cuerpo], ref["lat"], ref["lon"]), 2)
         nota = RELIEVE[cuerpo]["fuente"]
-        if abs(ref["lat"]) > LAT_POLO_NO_FIABLE:
-            nota += "; cerca del polo la proyección deforma la pendiente: valor no fiable"
+        if abs(ref["lat"]) > LAT_SOLO_NORTE_SUR:
+            nota += "; sobre 80° de latitud solo componente norte-sur (mínimo de la pendiente real)"
         refs.loc[i, "pendiente"] = valor
         refs.loc[i, "fuente_pendiente"] = nota
         print(f"{ref['sitio']:<14} {cuerpo:<6} pendiente {valor:>6} °")

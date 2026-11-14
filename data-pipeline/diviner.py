@@ -24,6 +24,9 @@ BASE = "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1"
 URL_GCP = f"{BASE}/data_derived_gcp/global_cumul_avg_cyl_10n20n_002.tab"
 URL_PRP = f"{BASE}/data_derived_prp/dlre_prp_south.tab"
 RADIO_LUNA_KM = 1737.4
+# Centro y diámetro (20,92 km): USGS/IAU Gazetteer of Planetary Nomenclature, Feature 5450, primera solución
+# de la tabla de ubicación (planetográfica, +Este). https://planetarynames.wr.usgs.gov/Feature/5450
+# El anillo del borde (9,5-12 km) y el fondo (<5 km) son decisiones del equipo alrededor del radio de 10,46 km.
 SHACKLETON_CENTRO = (-89.67, 129.78)
 
 # Formato de las tablas (etiquetas .lbl y .xml del PDS). Posiciones de columna en base 0.

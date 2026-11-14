@@ -2,13 +2,14 @@
 .env
 .env.*
 !.env.example
+.streamlit/secrets.toml
 
-# Datos pesados: se regeneran con data-pipeline/
+# Datos: SÍ se suben los verificados (datos/tierra/, datos/planetas/, datos/celdas.parquet; ver datos/FUENTES.md).
+# No se suben exportaciones sueltas, incompletas o de prueba de Earth Engine.
 datos/*.tif
-datos/planetas/diviner/
-datos/planetas/*.img
 
 # Entornos y dependencias
 node_modules/
 __pycache__/
+*.pyc
 .venv/

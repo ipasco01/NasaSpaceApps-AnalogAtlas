@@ -13,7 +13,7 @@ Busca lugares de la Tierra parecidos a un sitio de la Luna o Marte, con datos de
 | `CASOS_DE_USO.md` | Qué tiene que poder hacer cada persona en la app | Todos |
 | `science/referencias.csv` | Valores de cada sitio de la Luna y Marte, con su fuente | Ciencia, motor |
 | `science/analogos_conocidos.csv` | 17 análogos ya estudiados (para el modo descubrimiento) | Motor |
-| `data-pipeline/exportar_tierra.py` | Exporta las capas de la Tierra desde Google Earth Engine | Datos |
+| `data-pipeline/earth_engine_tierra.js` | Exporta las capas de la Tierra desde el Code Editor de Google Earth Engine | Datos |
 | `data-pipeline/tif_a_tabla.py` | Convierte el .tif exportado en tabla (`datos/celdas.parquet`) | Datos |
 | `data-pipeline/planetas.py` | Pendiente de la Luna y Marte desde el relieve de MOLA y LOLA | Datos, ciencia |
 | `data-pipeline/diviner.py` | Temperaturas de la Luna desde Diviner (baja solo las filas necesarias) | Datos, ciencia |
@@ -23,7 +23,7 @@ Busca lugares de la Tierra parecidos a un sitio de la Luna o Marte, con datos de
 ## Estado al 14 de noviembre, 15:30
 
 - **Luna y Marte:** listos. Jezero, Gale, Marius Hills y Shackleton (borde) con pendiente y temperaturas reales de la NASA.
-- **Tierra:** exportándose la versión **v4** desde Earth Engine (`data-pipeline/earth_engine_v4.js`). Las v1 a v3 salieron incompletas o con error y no se incluyen.
+- **Tierra:** lista en `datos/celdas.parquet` (334.741 celdas, todo el planeta) desde los archivos verificados de `datos/tierra/`. Faltan lluvia y polvo. Ver `datos/FUENTES.md`.
 - **Motor:** funciona con la tabla de prueba; falta correrlo con la tabla real de la Tierra.
 
 ## Cómo correrlo
@@ -31,8 +31,8 @@ Busca lugares de la Tierra parecidos a un sitio de la Luna o Marte, con datos de
 ```bash
 pip install pandas pyarrow numpy rasterio earthengine-api
 
-# 1. Tierra: pegar data-pipeline/earth_engine_v4.js en el Code Editor de Earth Engine y luego
-python data-pipeline/tif_a_tabla.py datos/atlas_analog_global_025_v4.tif datos/celdas.parquet
+# 1. Tierra: pegar data-pipeline/earth_engine_tierra.js en el Code Editor de Earth Engine, bajar los .tif y luego
+python data-pipeline/tif_a_tabla.py datos/celdas.parquet datos/tierra/atlas_analog_arido_hielo_v10.tif datos/tierra/atlas_analog_ndvi_v11.tif datos/tierra/atlas_analog_temperatura_v6.tif datos/tierra/atlas_analog_nieve_v6.tif datos/tierra/atlas_analog_relieve_v6.tif
 
 # 2. Luna y Marte (ya corrido; solo si cambian los sitios)
 python data-pipeline/planetas.py
