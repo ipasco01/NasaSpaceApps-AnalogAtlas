@@ -12,6 +12,7 @@ from fastapi import FastAPI, HTTPException
 from config.settings import API_HOST, API_PORT
 from models.data_loader import cargar_celdas
 from services.motor_service import MotorService
+from api.state import motor_service
 
 # Configuración de logging
 logging.basicConfig(
@@ -20,16 +21,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger("atlas")
 
-# Estado compartido: la instancia del motor se crea una sola vez
-motor: MotorService = None
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:
     """Carga la tabla de celdas una sola vez al arrancar el servidor."""
-    global motor
     logger.info("Cargando tabla de celdas al arrancar el servidor")
-    motor = MotorService(cargar_celdas())
+    motor_service = MotorService(cargar_celdas())
+    from api.state import motor_service as ms
+    ms.motor_service = motor_service
     logger.info("Servidor Atlas Analog listo")
     yield
     logger.info("Cerrando servidor Atlas Analog")
@@ -42,19 +41,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Registrar rutas (solo buscar.py existe por ahora)
+# Registrar rutas
 from api.routes import buscar
 app.include_router(buscar.router, prefix="/api")
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "celdas": int(len(motor.celdas)) if motor else 0}
-
-
-def get_motor() -> MotorService:
-    """Acceso al motor cargado; las rutas lo usan en lugar de recargar datos."""
-    return motor
+    from api.state import motor_service as ms
+    return {"status": "ok", "celdas": int(len(ms.motor_service.celdas)) if ms.motor_service else 0}
 
 
 if __name__ == "__main__":
