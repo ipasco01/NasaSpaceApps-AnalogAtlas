@@ -1,0 +1,62 @@
+{
+  "version": "0.1",
+  "fecha": "2026-11-14",
+  "autora": "Isabelita (equipo Ctrl Z)",
+  "nota": "Fuente única de nombres y formatos. Cambiar un nombre aquí obliga a avisar a todo el equipo.",
+
+  "celdas": {
+    "archivo": "datos/celdas.parquet",
+    "descripcion": "Una fila por celda de tierra firme, cuadrícula de 0,25° (~28 km). Generado por data-pipeline/tif_a_tabla.py",
+    "columnas": {
+      "lat": {"unidad": "grados", "descripcion": "Centro de la celda"},
+      "lon": {"unidad": "grados", "descripcion": "Centro de la celda, de -180 a 180"},
+      "elevacion": {"unidad": "m", "fuente": "ETOPO1 (NOAA)"},
+      "pendiente": {"unidad": "grados", "fuente": "Calculada desde elevacion, mismo método que la Luna y Marte"},
+      "temp_dia": {"unidad": "°C", "fuente": "MODIS Aqua MYD11A2, 13:30 local, media 2018-2023"},
+      "temp_noche": {"unidad": "°C", "fuente": "MODIS Aqua MYD11A2, 01:30 local, media 2018-2023"},
+      "rango_termico": {"unidad": "°C", "descripcion": "temp_dia - temp_noche"},
+      "lluvia": {"unidad": "mm/año", "fuente": "GPM IMERG V07, mediana mensual 2018-2023"},
+      "ndvi": {"unidad": "índice -1 a 1", "fuente": "MODIS MOD13A3"},
+      "arido": {"unidad": "0/1", "fuente": "MODIS MCD12Q1 2022, clase 16"},
+      "nieve": {"unidad": "% 0-100", "fuente": "MODIS MOD10A1, cobertura media"},
+      "hielo": {"unidad": "0/1", "fuente": "MODIS MCD12Q1 2022, clase 15"},
+      "permafrost_proxy": {"unidad": "0/1", "descripcion": "Temperatura media de superficie bajo 0 °C. Aproximación, no medición"},
+      "polvo": {"unidad": "espesor óptico", "fuente": "MERRA-2 DUEXTTAU, media 2022"}
+    }
+  },
+
+  "referencias": {
+    "archivo": "science/referencias.csv",
+    "descripcion": "Una fila por sitio de la Luna o Marte. Mismas columnas que celdas (menos elevacion y polvo) más sitio, cuerpo y fuentes. Valor vacío = la variable no se usa para ese sitio."
+  },
+
+  "api": {
+    "GET /api/referencias": {
+      "respuesta": [{"sitio": "gale", "cuerpo": "marte", "lat": -4.59, "lon": 137.44, "valores": {"temp_dia": -23.1}, "fuentes": {"temperatura": "..."}}]
+    },
+    "POST /api/interpretar": {
+      "pide": {"texto": "Quiero probar un rover en suelo volcánico seco como Jezero"},
+      "respuesta": {
+        "sitio": "jezero",
+        "pesos": {"lluvia": 0.2, "ndvi": 0.2, "arido": 0.15, "rango_termico": 0.15, "temp_noche": 0.1, "pendiente": 0.1, "polvo": 0.1},
+        "imprescindibles": ["arido"],
+        "descubrimiento": true,
+        "resumen": "Buscas terreno seco, sin vegetación y con grandes cambios de temperatura, como el cráter Jezero."
+      },
+      "nota": "La IA solo propone; si falla, el frontend usa GET /api/referencias y los pesos base. Usar salidas estructuradas, no tool_choice forzado."
+    },
+    "POST /api/buscar": {
+      "pide": {"sitio": "jezero", "pesos": {"lluvia": 0.2}, "imprescindibles": [], "descubrimiento": true, "top": 10},
+      "respuesta": {
+        "sitio": "jezero",
+        "tierra_no_llega": ["temp_noche"],
+        "lugares": [{"lat": -24.1, "lon": -69.9, "puntaje": 87.4, "tramo": "Muy buen análogo", "desglose": {"lluvia": 0.98, "ndvi": 0.95}}]
+      },
+      "tramos": {"75-100": "Muy buen análogo", "50-74": "Bueno", "25-49": "Parcial", "0-24": "Débil"}
+    },
+    "GET /api/celda?lat=&lon=&sitio=": {
+      "respuesta": {"lat": -5.62, "lon": -80.62, "valores": {"temp_dia": 46.9}, "puntaje": 61.2, "desglose": {"lluvia": 0.9}, "se_parece": ["lluvia", "arido"], "falla": ["temp_noche"]},
+      "nota": "se_parece: s >= 0.75; falla: s < 0.5. Siempre agregar los límites de la Tierra (gravedad, atmósfera, radiación) en la ficha."
+    }
+  }
+}
