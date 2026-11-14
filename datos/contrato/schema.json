@@ -16,10 +16,10 @@
       "temp_noche": {"unidad": "°C", "fuente": "MODIS Aqua MYD11A2, 01:30 local, media 2018-2023"},
       "rango_termico": {"unidad": "°C", "descripcion": "temp_dia - temp_noche"},
       "lluvia": {"unidad": "mm/año", "fuente": "GPM IMERG V07, mediana mensual 2018-2023"},
-      "ndvi": {"unidad": "índice -1 a 1", "fuente": "MODIS MOD13A3"},
-      "arido": {"unidad": "0/1", "fuente": "MODIS MCD12Q1 2022, clase 16"},
+      "ndvi": {"unidad": "índice -1 a 1", "fuente": "MODIS MOD13C1 (cuadrícula global 0,05°), media 2018-2023"},
+      "arido": {"unidad": "0/1", "fuente": "MODIS MCD12C1 2022 (cuadrícula global 0,05°), clase IGBP 16"},
       "nieve": {"unidad": "% 0-100", "fuente": "MODIS MOD10A1, cobertura media"},
-      "hielo": {"unidad": "0/1", "fuente": "MODIS MCD12Q1 2022, clase 15"},
+      "hielo": {"unidad": "0/1", "fuente": "MODIS MCD12C1 2022 (cuadrícula global 0,05°), clase IGBP 15"},
       "permafrost_proxy": {"unidad": "0/1", "descripcion": "Temperatura media de superficie bajo 0 °C. Aproximación, no medición"},
       "polvo": {"unidad": "espesor óptico", "fuente": "MERRA-2 DUEXTTAU, media 2022"}
     }

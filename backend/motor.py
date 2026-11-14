@@ -1,5 +1,5 @@
 # Atlas Analog · motor.py
-# v0.1 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+# v0.2 · 2026-11-14 · Isabelita (equipo Ctrl Z)
 # Puntaje de parecido entre cada celda de la Tierra y un sitio de referencia de la Luna o Marte.
 #
 # Por variable k:
@@ -25,11 +25,13 @@ REFERENCIAS = RAIZ / "science" / "referencias.csv"
 CONOCIDOS = RAIZ / "science" / "analogos_conocidos.csv"
 
 # Pesos de partida por cuerpo; la IA o la persona los cambian. Solo entran las variables con valor de referencia.
+# v0.2: se suma temp_dia (Shackleton solo tiene máxima del día) y permafrost_proxy para la Luna.
 PESOS_BASE = {
-    "marte": {"lluvia": 0.20, "ndvi": 0.20, "arido": 0.15, "rango_termico": 0.15,
-              "temp_noche": 0.10, "pendiente": 0.10, "polvo": 0.10},
-    "luna": {"lluvia": 0.15, "ndvi": 0.15, "arido": 0.15, "rango_termico": 0.20,
-             "temp_noche": 0.15, "pendiente": 0.10, "hielo": 0.10},
+    "marte": {"lluvia": 0.15, "ndvi": 0.15, "arido": 0.15, "rango_termico": 0.15,
+              "temp_noche": 0.10, "temp_dia": 0.10, "pendiente": 0.10, "polvo": 0.10},
+    "luna": {"lluvia": 0.10, "ndvi": 0.10, "arido": 0.10, "rango_termico": 0.15,
+             "temp_noche": 0.15, "temp_dia": 0.15, "pendiente": 0.10, "hielo": 0.05,
+             "permafrost_proxy": 0.10},
 }
 # Variables de sí o no (0/1): el parecido es directo
 BINARIAS = {"arido", "hielo", "permafrost_proxy"}
