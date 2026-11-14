@@ -41,8 +41,8 @@ PESOS_BASE: Dict[str, Dict[str, float]] = {
     },
 }
 
-TRAMOS: List[tuple] = [(75, 100, "Muy buen análogo"), (50, 74, "Bueno"),
-                       (25, 49, "Parcial"), (0, 24, "Débil")]
+TRAMOS = [(75, 100, "Muy buen análogo"), (50, 74, "Bueno"),
+          (25, 49, "Parcial"), (0, 24, "Débil")]
 
 API_HOST = "0.0.0.0"
 API_PORT = 8000
