@@ -1,5 +1,5 @@
 // Analog Atlas · frontend/src/components/PanelFiltros.jsx
-// v2.0 · 2026-11-15 · Isabelita (equipo Ctrl Z)
+// v2.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · filtro de sales y carbonatos
 // Paso 3, pestaña Results: lo principal es la lista de resultados. "Filters" y "Check a place" son botones que
 // abren su sección solo cuando se piden. Cada lugar tiene un enlace a Google Maps con sus coordenadas.
 import { useState } from "react";
@@ -7,7 +7,8 @@ import { coord, enGoogleMaps, fotoTierra, tramo } from "../lib/atlas.js";
 import { porcentajeTop } from "./Puntaje.jsx";
 import Icono from "./IconosAtlas.jsx";
 
-export const ROCAS = { any: "Any ground", volcanico: "Volcanic rock", sedimento: "Sedimentary ground" };
+export const ROCAS = { any: "Any ground", volcanico: "Volcanic rock", sedimento: "Sedimentary ground",
+  evaporita: "Salt flats (evaporites)", carbonato: "Carbonate rock" };
 const POR_PAGINA = 20;
 // Lugares de la región del equipo (Piura) para revisar en un clic; coordenadas del centro del desierto de Sechura
 const LUGARES_RAPIDOS = [{ nombre: "Sechura Desert, Piura", lat: -5.9, lon: -80.6 }];

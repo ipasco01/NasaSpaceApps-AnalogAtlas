@@ -6,7 +6,7 @@ import logging
 import pandas as pd
 
 from config.settings import (ruta_celdas, REFERENCIAS_FILE, ANALOGOS_CONOCIDOS_FILE, COLUMNAS_CELDAS,
-                             COLUMNAS_OBLIGATORIAS)
+                             COLUMNAS_OBLIGATORIAS, TUBOS_LAVA_FILE)
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,11 @@ def cargar_referencias() -> pd.DataFrame:
 
 def cargar_analogos_conocidos() -> pd.DataFrame:
     return pd.read_csv(ANALOGOS_CONOCIDOS_FILE)
+
+
+def cargar_tubos_lava() -> pd.DataFrame:
+    """Tubos de lava conocidos (science/tubos_lava.csv): solo se muestran en el mapa, no entran al puntaje."""
+    return pd.read_csv(TUBOS_LAVA_FILE)
 
 
 def lista_referencias() -> list:

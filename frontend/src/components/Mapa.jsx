@@ -1,5 +1,5 @@
 // Analog Atlas · frontend/src/components/Mapa.jsx
-// v1.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · relieve 3D solo en la vista del lugar, con botón para apagarlo
+// v1.2 · 2026-11-15 · Isabelita (equipo Ctrl Z) · capa de tubos de lava conocidos; roca con sales y carbonatos
 // Mapa satelital a pantalla completa (Sentinel-2 cloudless, EOX) con los lugares como puntos.
 // Más opaco = más parecido. Clic en un punto abre su ficha. El teclado usa la lista de resultados.
 import { useEffect, useRef, useState } from "react";
@@ -32,7 +32,8 @@ const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&
 const FILAS = [["temp_dia", "Day", (v) => `${Math.round(v)} °C`], ["temp_noche", "Night", (v) => `${Math.round(v)} °C`],
   ["pendiente", "Slope", (v) => `${v.toFixed(1)}°`], ["elevacion", "Elevation", (v) => `${Math.round(v).toLocaleString()} m`],
   ["polvo", "Dust", (v) => v.toFixed(2)]];
-const roca = (v) => (v?.volcanico === 1 ? "Volcanic" : v?.sedimento === 1 ? "Sediment" : v?.volcanico === 0 ? "Other" : "n/a");
+const roca = (v) => (v?.volcanico === 1 ? "Volcanic" : v?.sedimento === 1 ? "Sediment" : v?.evaporita === 1 ? "Salt"
+  : v?.carbonato === 1 ? "Carbonate" : v?.volcanico === 0 ? "Other" : "n/a");
 function tarjeta(l, ref) {
   const filas = FILAS.filter(([k]) => l.valores[k] != null)
     .map(([k, n, f]) => `<tr><th>${n}</th><td>${f(l.valores[k])}</td><td>${ref?.valores?.[k] != null ? f(ref.valores[k]) : "n/a"}</td></tr>`).join("");
@@ -42,7 +43,7 @@ function tarjeta(l, ref) {
     <p>Typical values, 2018–2023 means. Click to open.</p></div>`;
 }
 
-export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, referencia, conocidos = [], alConocido }) {
+export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, referencia, conocidos = [], tubos = [], alConocido }) {
   const conocidoRef = useRef(alConocido);
   conocidoRef.current = alConocido;
   const porId = useRef(new Map());
@@ -92,6 +93,18 @@ export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, ref
           + `${p.por_que ? `<p>${esc(p.por_que)}. <i>${esc(p.fuente)}</i></p>` : ""}<p>Click to score it against your reference site.</p></div>`).addTo(m);
       });
       m.on("mouseleave", "conocidos", () => { m.getCanvas().style.cursor = ""; aviso.remove(); });
+      // Tubos de lava conocidos: solo referencia visual (no entran al puntaje)
+      m.addSource("tubos", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+      m.addLayer({ id: "tubos", type: "circle", source: "tubos", paint: {
+        "circle-radius": 6, "circle-color": "#ffb020", "circle-stroke-color": "#1a1206", "circle-stroke-width": 2 } });
+      m.on("click", "tubos", (e) => { const p = e.features[0].properties; conocidoRef.current?.(p.lat, p.lon); });
+      m.on("mouseenter", "tubos", (e) => {
+        m.getCanvas().style.cursor = "pointer";
+        const p = e.features[0].properties;
+        aviso.setLngLat(e.lngLat).setHTML(`<div class="hover-card"><span class="note">Known lava tube</span><b>${esc(p.nombre)}</b>`
+          + `<p>${esc(p.por_que)}. <i>${esc(p.fuente)}</i></p><p>Click to score it against your reference site.</p></div>`).addTo(m);
+      });
+      m.on("mouseleave", "tubos", () => { m.getCanvas().style.cursor = ""; aviso.remove(); });
       listo.current = true;
       m.fire("datos-listos");
     });
@@ -106,6 +119,14 @@ export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, ref
     if (listo.current) aplicar();
     else m.once("datos-listos", aplicar);
   }, [conocidos]);
+
+  useEffect(() => {
+    const m = mapa.current;
+    const aplicar = () => m.getSource("tubos").setData({ type: "FeatureCollection", features: tubos.map((c) => ({
+      type: "Feature", geometry: { type: "Point", coordinates: [c.lon, c.lat] }, properties: c })) });
+    if (listo.current) aplicar();
+    else m.once("datos-listos", aplicar);
+  }, [tubos]);
 
   // Puntos y encuadre cuando cambian los resultados
   useEffect(() => {
@@ -150,6 +171,7 @@ export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, ref
       <div className="map-legend" aria-label="Map legend">
         <span><i className="dot" /> Best matches (brighter scores higher)</span>
         <span><i className="ring" /> Well-known analog sites</span>
+        <span><i className="tube" /> Known lava tubes</span>
       </div>
       {elegido && (
         <button type="button" className="btn btn-secondary map-3d" aria-pressed={tresD} onClick={() => setTresD(!tresD)}>

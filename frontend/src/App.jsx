@@ -1,5 +1,5 @@
 // Analog Atlas · frontend/src/App.jsx
-// v2.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · en celular los resultados son una hoja que se arrastra (Asa)
+// v2.2 · 2026-11-15 · Isabelita (equipo Ctrl Z) · capa de tubos de lava conocidos en el mapa
 // Flujo de 4 pasos: 1 Search (portada) · 2 Compare (globos 3D de Marte y la Luna) · 3 Explore (mapa satelital a
 // pantalla completa con filtros, resultados, Ask y "Check a place") · 4 Place (ficha con "View as").
 // Un solo puntaje para todos (pesos base del cuerpo); el rol solo cambia qué muestra la ficha. Todo lo calcula la API.
@@ -59,6 +59,7 @@ export default function App() {
   const [descubrimiento, setDescubrimiento] = useState(true);
   const [refs, setRefs] = useState(null);
   const [conocidos, setConocidos] = useState([]);
+  const [tubos, setTubos] = useState([]);
   const [validacion, setValidacion] = useState(null);
   const [res, setRes] = useState(null);
   const [faltan, setFaltan] = useState([]);
@@ -84,8 +85,9 @@ export default function App() {
   useEffect(() => { if (paso === 4) setAltoRes("25%"); }, [paso, elegidoId]);
   useEffect(() => {
     if (paso >= 3 && !conocidos.length) api.conocidos().then(setConocidos).catch(() => {});
+    if (paso >= 3 && !tubos.length) api.tubos().then(setTubos).catch(() => {});
     if (!validacion) api.validacion().then(setValidacion).catch(() => {});
-  }, [paso, conocidos.length, validacion]);
+  }, [paso, conocidos.length, tubos.length, validacion]);
 
   // Datos de referencia (valores medidos de cada sitio) para el panel del paso 2 y la ficha
   useEffect(() => {
@@ -176,7 +178,7 @@ export default function App() {
         <main className="stage" style={{ "--alto-res": altoRes }}>
           <Mapa lugares={filtrados} elegido={elegido} alElegir={elegir} acento={acento} encuadre={res?.clave}
             referencia={refs ? { nombre: SITIOS[sitio].nombre, valores: refs[sitio].valores } : null}
-            conocidos={conocidos} alConocido={revisarLugar} />
+            conocidos={conocidos} tubos={tubos} alConocido={revisarLugar} />
           {res && (
             <aside className="panel panel-left" aria-labelledby="panel-t">
               <Asa alto={altoRes} setAlto={setAltoRes} cerrado="25%" abierto="75%" variable="--alto-res" en=".stage" etiqueta="Drag or tap to resize the results" />
