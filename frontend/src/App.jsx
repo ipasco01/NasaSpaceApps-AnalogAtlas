@@ -1,9 +1,10 @@
 // Analog Atlas · frontend/src/App.jsx
-// v2.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+// v2.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · en celular los resultados son una hoja que se arrastra (Asa)
 // Flujo de 4 pasos: 1 Search (portada) · 2 Compare (globos 3D de Marte y la Luna) · 3 Explore (mapa satelital a
 // pantalla completa con filtros, resultados, Ask y "Check a place") · 4 Place (ficha con "View as").
 // Un solo puntaje para todos (pesos base del cuerpo); el rol solo cambia qué muestra la ficha. Todo lo calcula la API.
 import { useEffect, useMemo, useState } from "react";
+import Asa from "./components/Asa.jsx";
 import Cabecera from "./components/Cabecera.jsx";
 import FichaLugar from "./components/FichaLugar.jsx";
 import Globo from "./components/Globo.jsx";
@@ -67,6 +68,7 @@ export default function App() {
   const [elegidoId, setElegidoId] = useState(null);
   const [externo, setExterno] = useState(null);
   const [pestana, setPestana] = useState("filtros");
+  const [altoRes, setAltoRes] = useState("25%"); // celular: altura del panel de resultados
   const [mostrar, setMostrar] = useState(POR_PAGINA);
   const [recorrido, setRecorrido] = useState(false);
   const [guia, setGuia] = useState(false); // recorrido centrado, abierto a pedido
@@ -78,6 +80,8 @@ export default function App() {
     setAcento(getComputedStyle(document.documentElement).getPropertyValue("--accent").trim());
   }, [tema]);
   useEffect(() => guardar("aa-vista", vista), [vista]);
+  // Celular: al abrir un lugar la lista baja, para que no queden dos hojas apiladas sobre el mapa
+  useEffect(() => { if (paso === 4) setAltoRes("25%"); }, [paso, elegidoId]);
   useEffect(() => {
     if (paso >= 3 && !conocidos.length) api.conocidos().then(setConocidos).catch(() => {});
     if (!validacion) api.validacion().then(setValidacion).catch(() => {});
@@ -169,12 +173,16 @@ export default function App() {
         <PasoCompare consulta={consulta} sitioSugerido={sitio} referencias={refs} continuar={(s) => buscar(s)}
           cargando={cargando} error={error} acento={acento} />
       ) : (
-        <main className="stage">
+        <main className="stage" style={{ "--alto-res": altoRes }}>
           <Mapa lugares={filtrados} elegido={elegido} alElegir={elegir} acento={acento} encuadre={res?.clave}
             referencia={refs ? { nombre: SITIOS[sitio].nombre, valores: refs[sitio].valores } : null}
             conocidos={conocidos} alConocido={revisarLugar} />
           {res && (
             <aside className="panel panel-left" aria-labelledby="panel-t">
+              <Asa alto={altoRes} setAlto={setAltoRes} variable="--alto-res" en=".stage" etiqueta="Drag or tap to resize the results" />
+              {altoRes === "25%" && (
+                <button type="button" className="btn btn-primary solo-movil ver-top" onClick={() => setAltoRes("60%")}>See top 10 results</button>
+              )}
               <div className="panel-head">
                 <div className="ref-card">
                   <Globo compacto textura={TEXTURA[SITIOS[sitio].cuerpo]} nombre={SITIOS[sitio].cuerpo} acento={acento} elegido={sitio}

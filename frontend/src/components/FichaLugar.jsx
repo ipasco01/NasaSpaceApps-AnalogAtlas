@@ -1,12 +1,13 @@
 // Analog Atlas · frontend/src/components/FichaLugar.jsx
-// v2.1 · 2026-11-15 · Isabelita (equipo Ctrl Z)
+// v2.2 · 2026-11-15 · Isabelita (equipo Ctrl Z)
 // Paso 4: ficha del lugar. Un solo puntaje; "View as" cambia qué se muestra primero (Educator, Researcher,
 // Mission test, Explorer). "Expand comparison" abre la Tierra y la referencia grandes, lado a lado o con deslizador.
-// v2.1: en celular la ficha ocupa media pantalla y una flecha la sube entera; tabla de prueba con encabezados y nombres cortos.
+// v2.2: en celular la ficha es una hoja que se arrastra con la línea de arriba (Asa); tabla de prueba con encabezados y nombres cortos.
 import { Fragment, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ICONO_VAR, LIMITES, SITIOS, VARIABLES, VISTAS, anchoVistaKm, api, coord, enGoogleMaps, fotoTierra, tramo } from "../lib/atlas.js";
 import { Cerrar } from "./Iconos.jsx";
+import Asa from "./Asa.jsx";
 import Icono from "./IconosAtlas.jsx";
 import Puntaje from "./Puntaje.jsx";
 
@@ -150,7 +151,7 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
   const [cerca, setCerca] = useState(null);
   const [robustez, setRobustez] = useState({ estado: "nada" });
   const [grande, setGrande] = useState(false);
-  const [entera, setEntera] = useState(false); // celular: media pantalla o pantalla entera
+  const [alto, setAlto] = useState("40%"); // celular: altura de la ficha (la cambia la línea de arrastre)
   const titulo = useRef(null);
 
   useEffect(() => {
@@ -204,12 +205,8 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
 
   return (
     <>
-      <aside className={`panel panel-right${entera ? " entera" : ""}`} aria-labelledby="ficha-t">
-        <button type="button" className="sheet-toggle" onClick={() => setEntera(!entera)} aria-expanded={entera}
-          aria-label={entera ? "Show less of the place card" : "Show the whole place card"}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-            strokeLinejoin="round" aria-hidden="true"><path d={entera ? "m6 9 6 6 6-6" : "m6 15 6-6 6 6"} /></svg>
-        </button>
+      <aside className="panel panel-right" aria-labelledby="ficha-t" style={{ "--alto-ficha": alto }}>
+        <Asa alto={alto} setAlto={setAlto} variable="--alto-ficha" en=".panel" etiqueta="Drag or tap to resize the place card" />
         <div className="panel-body" style={{ padding: 0, gap: 0 }}>
           <div className="place-hero">
             <div className="side-mini">

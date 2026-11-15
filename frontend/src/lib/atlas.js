@@ -1,5 +1,5 @@
 // Analog Atlas · frontend/src/lib/atlas.js
-// v1.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+// v1.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · enlace a Google Maps en satelital plano
 // Catálogos de la interfaz, cliente de la API y utilidades. Los números vienen de la API; aquí solo hay textos y
 // las fuentes de los límites físicos (NASA Fact Sheets, Hassler et al. 2014, Zhang et al. 2020).
 
@@ -61,7 +61,8 @@ export function fotoTierra(lat, lon, anchoKm, anchoPx = 480, altoPx = 360) {
   return `${EOX_WMS}&BBOX=${bbox}&WIDTH=${anchoPx}&HEIGHT=${altoPx}`;
 }
 // Google Maps con un pin en el lugar (URL pública documentada de Maps; solo lleva las coordenadas)
-export const enGoogleMaps = (lat, lon) => `https://www.google.com/maps/search/?api=1&query=${lat.toFixed(4)},${lon.toFixed(4)}`;
+// Vista satelital plana desde arriba (la búsqueda abría el 3D de Google, con el relieve deformado)
+export const enGoogleMaps = (lat, lon) => `https://www.google.com/maps/@?api=1&map_action=map&center=${lat.toFixed(4)},${lon.toFixed(4)}&zoom=11&basemap=satellite`;
 export const anchoVistaKm = (cuerpo) => (cuerpo === "Mars" ? 120 : 60);
 
 export const EOX_TESELAS = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg";
