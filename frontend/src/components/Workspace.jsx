@@ -1,11 +1,9 @@
-// Analog Atlas · Workspace (mapa + sidebar + AI panel)
-
+cat > src/components/Workspace.jsx << 'EOF'
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { colorTramo } from "../lib/atlasApi";
-import FilterSidebar from "./FilterSidebar";
-import AskAIPanel from "./AskAIPanel";
+import FilterSidebar from "./FilterSidebar.jsx";
+import AskAIPanel from "./AskAIPanel.jsx";
 
 const EOX_STYLE = {
   version: 8,
@@ -68,3 +66,4 @@ export default function Workspace({ atlas }) {
     </div>
   );
 }
+EOF
