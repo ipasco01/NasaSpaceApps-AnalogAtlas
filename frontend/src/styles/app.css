@@ -1,5 +1,5 @@
 /* Analog Atlas · frontend/src/styles/app.css
-   v2.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+   v2.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · ficha a media pantalla en celular
    Componentes con los tokens de tokens.css. Sombras solo en lo que flota sobre el mapa (shadow-overlay). */
 
 *,
@@ -2104,5 +2104,72 @@ details ul {
   .expand-head .pager .btn,
   .expand-head .tabs {
     height: 40px;
+  }
+}
+
+/* ---------- Ficha v2.1 (2026-11-15): botones que caben, pestañas en una línea, ficha a media pantalla en celular ---------- */
+.actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.actions .btn {
+  min-width: 0;
+  height: auto;
+  min-height: var(--control-h);
+  white-space: normal; /* si un texto no cabe, pasa a la línea de abajo en vez de salirse del panel */
+  text-align: center;
+}
+.tabs-4 .tab {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.kpi-how summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.kpi-how[open] summary {
+  margin-bottom: var(--s-2);
+}
+.sheet-toggle {
+  display: none;
+}
+@media (max-width: 1024px) {
+  .panel-right {
+    top: auto;
+    height: 56%; /* misma altura que el panel de resultados: el mapa sigue a la vista arriba */
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+  .panel-right.entera {
+    top: 0;
+    height: auto;
+    border-radius: 0;
+  }
+  .sheet-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    height: 32px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--muted);
+    cursor: pointer;
+  }
+}
+@media (max-width: 640px) {
+  .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .side-mini,
+  .side-mini img {
+    height: 160px;
+  }
+  .ficha {
+    padding: var(--s-4);
+  }
+  .check {
+    column-gap: var(--s-2);
   }
 }

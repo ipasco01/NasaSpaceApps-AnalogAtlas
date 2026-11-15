@@ -16,3 +16,7 @@ __pycache__/
 
 # Frontend compilado: se genera dentro de Docker (npm run build)
 frontend/dist/
+
+# Documentos internos del equipo (no se publican)
+ARQUITECTURA.md
+CASOS_DE_USO.md

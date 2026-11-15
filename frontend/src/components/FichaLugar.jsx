@@ -1,7 +1,8 @@
 // Analog Atlas · frontend/src/components/FichaLugar.jsx
-// v2.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+// v2.1 · 2026-11-15 · Isabelita (equipo Ctrl Z)
 // Paso 4: ficha del lugar. Un solo puntaje; "View as" cambia qué se muestra primero (Educator, Researcher,
 // Mission test, Explorer). "Expand comparison" abre la Tierra y la referencia grandes, lado a lado o con deslizador.
+// v2.1: en celular la ficha ocupa media pantalla y una flecha la sube entera; tabla de prueba con encabezados y nombres cortos.
 import { Fragment, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ICONO_VAR, LIMITES, SITIOS, VARIABLES, VISTAS, anchoVistaKm, api, coord, enGoogleMaps, fotoTierra, tramo } from "../lib/atlas.js";
@@ -11,6 +12,8 @@ import Puntaje from "./Puntaje.jsx";
 
 const UNIDAD = { temp_dia: " °C", temp_noche: " °C", rango_termico: " °C", pendiente: "°", elevacion: " m" };
 const CHEQUEO = ["roca", "pendiente", "polvo", "elevacion", "temp_dia", "temp_noche"];
+// Nombres cortos para la tabla de la prueba (caben en una línea a 390 px)
+const CORTO = { roca: "Rock", pendiente: "Slope", polvo: "Dust", elevacion: "Elevation", temp_dia: "Day temp.", temp_noche: "Night temp." };
 // "Good for" en la vista Mission test: [texto, ícono de tipo de prueba]
 const BUENO_PARA = { roca: (r) => [`Driving on ${r.toLowerCase()}`, "rover-mobility"], pendiente: () => ["Slope and mobility tests", "rover-mobility"],
   polvo: () => ["Dust on suits and moving parts", "spacesuit"], arido: () => ["Mobility on barren ground", "rover-mobility"],
@@ -147,6 +150,7 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
   const [cerca, setCerca] = useState(null);
   const [robustez, setRobustez] = useState({ estado: "nada" });
   const [grande, setGrande] = useState(false);
+  const [entera, setEntera] = useState(false); // celular: media pantalla o pantalla entera
   const titulo = useRef(null);
 
   useEffect(() => {
@@ -200,7 +204,12 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
 
   return (
     <>
-      <aside className="panel panel-right" aria-labelledby="ficha-t">
+      <aside className={`panel panel-right${entera ? " entera" : ""}`} aria-labelledby="ficha-t">
+        <button type="button" className="sheet-toggle" onClick={() => setEntera(!entera)} aria-expanded={entera}
+          aria-label={entera ? "Show less of the place card" : "Show the whole place card"}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+            strokeLinejoin="round" aria-hidden="true"><path d={entera ? "m6 9 6 6 6-6" : "m6 15 6-6 6 6"} /></svg>
+        </button>
         <div className="panel-body" style={{ padding: 0, gap: 0 }}>
           <div className="place-hero">
             <div className="side-mini">
@@ -219,7 +228,7 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
                 <span className="mono muted">{coord(lugar.lat, lugar.lon)}</span>
               </div>
               <a className="btn btn-secondary" href={enGoogleMaps(lugar.lat, lugar.lon)} target="_blank" rel="noopener noreferrer">
-                Open in Google Maps<span className="sr-only"> (new tab)</span>
+                Google Maps ↗<span className="sr-only"> (new tab)</span>
               </a>
             </div>
             <Puntaje lugar={lugar} nombreRef={s.nombre} cuerpo={s.cuerpo} validacion={validacion} />
@@ -276,18 +285,19 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
 
             {vista === "testing" && (
               <div className="vista">
-                <h3 className="section-title">Ground for your test <span>here · {s.nombre}</span></h3>
+                <h3 className="section-title">Ground for your test</h3>
                 <div className="check">
+                  <span /><span className="note">Here</span><span className="note">{s.nombre.split(" ")[0]}</span><span />
                   {CHEQUEO.map((k) => {
                     const e = estado(lugar.desglose, k);
                     return (
                       <Fragment key={k}>
                         <span className="muted con-icono">
                           <Icono nombre={k === "roca" ? (referencia.sedimento === 1 ? "sedimentary-ground" : "volcanic-rock") : ICONO_VAR[k]} size={16} />
-                          {k === "roca" ? "Rock" : k === "pendiente" ? "Slope, 28 km average" : VARIABLES[k]}
+                          {CORTO[k] ?? VARIABLES[k]}
                         </span>
-                        <b>{k === "roca" ? rocaAqui ?? "n/a" : fmt(k, lugar.valores[k])}</b>
-                        <span className="muted">{k === "roca" ? roca(referencia) ?? "n/a" : fmt(k, valorDe(k, referencia))}</span>
+                        <b>{k === "roca" ? rocaAqui?.split(" ")[0] ?? "n/a" : fmt(k, lugar.valores[k])}</b>
+                        <span className="muted">{k === "roca" ? roca(referencia)?.split(" ")[0] ?? "n/a" : fmt(k, valorDe(k, referencia))}</span>
                         <span className={`mark ${e}`} aria-label={e === "ok" ? "matches" : e === "ko" ? "does not match" : e === "mid" ? "partly" : "not compared"}>{SIMBOLO[e]}</span>
                       </Fragment>
                     );
@@ -298,8 +308,8 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
                   <div><h3 className="ko">Not for</h3><ul>{noPara.map((t) => <li key={t}>{t}</li>)}</ul></div>
                 </div>
                 <div className="actions">
-                  <button type="button" className="btn btn-secondary" onClick={cambiarSitio}><Icono nombre="change-site" size={16} /> Compare with another site</button>
-                  <button type="button" className="btn btn-primary" onClick={brief}><Icono nombre="download-brief" size={16} /> Download test brief</button>
+                  <button type="button" className="btn btn-secondary" onClick={cambiarSitio}><Icono nombre="change-site" size={16} /> Change site</button>
+                  <button type="button" className="btn btn-primary" onClick={brief}><Icono nombre="download-brief" size={16} /> Download brief</button>
                 </div>
               </div>
             )}
