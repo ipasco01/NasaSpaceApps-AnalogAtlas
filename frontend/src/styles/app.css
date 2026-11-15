@@ -1965,7 +1965,7 @@ details ul {
   .header {
     grid-template-columns: auto 1fr auto;
   }
-  .brand span,
+  .brand > span:not(.brand-mark),
   .step .label {
     display: none;
   }
@@ -2020,5 +2020,89 @@ details ul {
     right: var(--s-2);
     max-width: none;
     bottom: calc(52% + var(--s-2));
+  }
+}
+
+/* ---------- Celular (v2.1): revisado con capturas en 390 × 844 ---------- */
+.site-body > * {
+  flex-shrink: 0; /* los botones no se aplastan cuando el panel tiene desplazamiento propio */
+}
+.globe.globe-sm {
+  width: 120px;
+  height: 120px;
+}
+@media (max-width: 1024px) {
+  /* Panel de resultados abajo: se desplaza entero (cabecera incluida) para que los resultados siempre se alcancen */
+  .panel-left {
+    height: 56%;
+    overflow-y: auto;
+  }
+  .panel-left .panel-body {
+    flex: none;
+    overflow: visible;
+  }
+  .map-credit {
+    bottom: calc(56% + var(--s-2));
+  }
+  .map-legend {
+    top: var(--s-2);
+    right: var(--s-2);
+    font-size: 11px;
+  }
+  .globe.globe-sm {
+    width: 64px;
+    height: 64px;
+  }
+  .ref-card {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+  .ref-card .panel-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  /* Modal de comparación a pantalla completa, con el título y el cierre siempre arriba */
+  .expand {
+    padding: 0;
+  }
+  .expand-card {
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+  .expand-head {
+    position: relative;
+    align-items: flex-start;
+    padding-right: 64px;
+  }
+  .expand-head .btn-icon[aria-label="Close comparison"] {
+    position: absolute;
+    top: var(--s-2);
+    right: var(--s-2);
+  }
+}
+@media (max-width: 640px) {
+  .header {
+    gap: var(--s-2);
+    padding: 0 var(--s-3);
+  }
+  .brand-mark {
+    width: 32px;
+    height: 24px;
+  }
+  .steps {
+    gap: var(--s-1);
+  }
+  .step {
+    padding: 0 var(--s-1);
+  }
+  .header-actions .btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+  .expand-head .pager .btn,
+  .expand-head .tabs {
+    height: 40px;
   }
 }

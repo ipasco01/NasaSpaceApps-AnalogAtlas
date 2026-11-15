@@ -15,6 +15,12 @@ export const CUERPOS = {
   Mars: { textura: "/img/mars_2k.jpg", r: 0.532, pos: [2.3, 0, 0], nombre: "Mars" },
 };
 const VISTA_GENERAL = { pos: new THREE.Vector3(0, 1.6, 10.5), objetivo: new THREE.Vector3(0, 0, 0) };
+const ANCHO_ESCENA = 3.6; // mitad del ancho que ocupan los tres planetas (de la Tierra a Marte), en unidades de la escena
+// En pantallas angostas (celular) la cámara se aleja lo justo para que entren los tres planetas
+function vistaGeneral(aspecto) {
+  const minimo = ANCHO_ESCENA / (Math.tan((35 / 2) * Math.PI / 180) * aspecto);
+  return VISTA_GENERAL.pos.clone().multiplyScalar(Math.max(1, minimo / VISTA_GENERAL.pos.z));
+}
 const PANEL_PX = 456; // ancho del panel derecho + margen: la escena se centra en el espacio libre
 
 export default function SistemaSolar({ sitios, foco, elegido, alPlaneta, alSitio, acento }) {
@@ -31,7 +37,7 @@ export default function SistemaSolar({ sitios, foco, elegido, alPlaneta, alSitio
     el.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
     const camara = new THREE.PerspectiveCamera(35, 1, 0.05, 200);
-    camara.position.copy(VISTA_GENERAL.pos);
+    camara.position.copy(vistaGeneral(el.clientWidth / Math.max(el.clientHeight, 1)));
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.55));
     const sol = new THREE.DirectionalLight(0xffffff, 2.2);
@@ -137,7 +143,7 @@ export default function SistemaSolar({ sitios, foco, elegido, alPlaneta, alSitio
     api.current = {
       general: () => {
         girando = !quieto;
-        destino = { pos: VISTA_GENERAL.pos.clone(), objetivo: VISTA_GENERAL.objetivo.clone() };
+        destino = { pos: vistaGeneral(camara.aspect), objetivo: VISTA_GENERAL.objetivo.clone() };
       },
       planeta: (clave) => {
         girando = !quieto;
