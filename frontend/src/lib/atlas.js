@@ -67,6 +67,8 @@ export const anchoVistaKm = (cuerpo) => (cuerpo === "Mars" ? 120 : 60);
 
 export const EOX_TESELAS = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg";
 export const CREDITO_EOX = "Sentinel-2 cloudless 2021 by EOX IT Services GmbH (s2maps.eu), contains modified Copernicus Sentinel data 2021";
+export const RELIEVE_TESELAS = "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png";
+export const CREDITO_RELIEVE = "3D terrain: Terrain Tiles (Mapzen, AWS Open Data), from SRTM, ETOPO1 and other sources";
 
 // ---------------------------------------------------------------- API (misma dirección que la página)
 async function pedir(ruta, opciones) {

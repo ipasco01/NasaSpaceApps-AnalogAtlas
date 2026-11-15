@@ -28,6 +28,7 @@ The idea and the scope of Analog Atlas are the team's own. We used Claude (Anthr
 - ETOPO1 (NOAA) for Earth elevation and slope.
 - GLiM, Global Lithological Map (Hartmann & Moosdorf 2012, CC BY 3.0) for the volcanic and sedimentary rock fractions.
 - Sentinel-2 cloudless 2021 by EOX (contains modified Copernicus Sentinel data, CC BY-NC-SA 4.0) for Earth imagery.
+- Terrain Tiles (Mapzen, AWS Open Data; built from SRTM, ETOPO1 and other sources) for the 3D relief in the place view.
 - MEDA (Perseverance) and REMS (Curiosity) ground temperatures, via Atri et al. 2022.
 
 ## 3. References

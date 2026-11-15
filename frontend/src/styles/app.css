@@ -2223,3 +2223,25 @@ details ul {
     column-gap: var(--s-2);
   }
 }
+
+/* ---------- Relieve 3D en la vista del lugar (v2.3, 2026-11-15) ---------- */
+.map-3d {
+  position: absolute;
+  z-index: 5;
+  right: calc(440px + var(--s-4) * 2); /* a la izquierda de la ficha, que ocupa la derecha */
+  top: var(--s-4); /* abajo está el crédito de las imágenes */
+  height: 36px;
+  box-shadow: var(--shadow-overlay);
+}
+.map-3d[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+@media (max-width: 1024px) {
+  .map-3d {
+    right: var(--s-2);
+    bottom: auto;
+    top: 156px; /* debajo del crédito, que en la vista del lugar sube y ocupa hasta 3 líneas */
+    height: 44px;
+  }
+}
