@@ -1,8 +1,9 @@
 // Analog Atlas · frontend/src/components/Puntaje.jsx
-// v2.0 · 2026-11-15 · Isabelita (equipo Ctrl Z)
+// v2.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · la explicación del puntaje se pliega en celular
 // El parecido explicado para cualquiera. Número principal: en qué % de la Tierra queda el lugar ("Top 3 %"),
 // porque un puntaje absoluto bajo puede ser de los mejores del planeta. Debajo: puntaje 0-100 con sus tramos,
 // puesto exacto, cuántas características coinciden y la prueba con los análogos famosos.
+import { useState } from "react";
 import { TRAMOS } from "../lib/atlas.js";
 
 const ESCALA = [...TRAMOS].reverse(); // de 0 a 100: Weak, Partial, Good, Strong
@@ -18,6 +19,8 @@ export default function Puntaje({ lugar, nombreRef, cuerpo, compacto = false, va
   const p = Math.round(lugar.puntaje);
   const tramo = TRAMOS.find(([min]) => lugar.puntaje >= min)[1];
   const top = lugar.puesto > 0 ? porcentajeTop(lugar.puesto, lugar.de) : null;
+  // Abierta en pantallas grandes; plegada en celular para que las pestañas se vean antes
+  const [abierto, setAbierto] = useState(() => window.matchMedia("(min-width: 641px)").matches);
   return (
     <section className={`kpi${compacto ? " kpi-sm" : ""}`} aria-label="How alike this place is, explained">
       <div className="kpi-main">
@@ -53,12 +56,15 @@ export default function Puntaje({ lugar, nombreRef, cuerpo, compacto = false, va
         <div><dt>Features that match</dt><dd className="num">{coinciden} <span>of {valores.length} measured</span></dd></div>
       </dl>
       {!compacto && (
-        <p className="note">
-          Each feature (temperature, dryness, rock, slope…) gets 0 to 100 and they are combined, so one big difference pulls the
-          score down. 100 means as close as Earth gets, not identical: no place on Earth has the gravity or the air
-          of {cuerpo === "Moon" ? "the Moon" : "Mars"}.
-          {validacion && ` Check: ${validacion.top20} of ${validacion.total} well-known analog sites rank in Earth's top 20% for at least one reference site.`}
-        </p>
+        <details className="kpi-how" open={abierto} onToggle={(e) => setAbierto(e.currentTarget.open)}>
+          <summary>How is this scored?</summary>
+          <p className="note">
+            Each feature (temperature, dryness, rock, slope…) gets 0 to 100 and they are combined, so one big difference pulls the
+            score down. 100 means as close as Earth gets, not identical: no place on Earth has the gravity or the air
+            of {cuerpo === "Moon" ? "the Moon" : "Mars"}.
+            {validacion && ` Check: ${validacion.top20} of ${validacion.total} well-known analog sites rank in Earth's top 20% for at least one reference site.`}
+          </p>
+        </details>
       )}
     </section>
   );
