@@ -1,0 +1,51 @@
+/* Analog Atlas · Design tokens */
+:root {
+  /* Morados (primario de marca y acción) */
+  --aa-violet-700: #6d28d9;
+  --aa-violet-600: #7c3aed;
+  --aa-violet-500: #8b5cf6;
+  --aa-violet-300: #a78bfa;
+  --aa-violet-50:  #f5f3ff;
+
+  /* Neutros */
+  --aa-ink-900: #111827;
+  --aa-ink-700: #374151;
+  --aa-ink-500: #6b7280;
+  --aa-line:    #e5e7eb;
+  --aa-surface: #ffffff;
+  --aa-canvas:  #f9fafb;
+
+  /* Tramos de puntaje */
+  --aa-tramo-alto:   #16a34a;
+  --aa-tramo-medio:  #6d28d9;
+  --aa-tramo-bajo:   #d97706;
+  --aa-tramo-debil:  #dc2626;
+
+  /* Modo oscuro (ficha) */
+  --aa-dark-bg: #0f172a;
+  --aa-dark-panel: #1e293b;
+  --aa-dark-border: #334155;
+  --aa-dark-text: #f8fafc;
+  --aa-dark-text-muted: #94a3b8;
+  --aa-dark-cyan: #06b6d4;
+
+  /* Radios, sombras, tipografía */
+  --aa-radius: 12px;
+  --aa-radius-pill: 999px;
+  --aa-shadow: 0 8px 24px rgba(17, 24, 39, 0.12);
+  --aa-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --aa-tabular: font-variant-numeric: tabular-nums;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--aa-font);
+  background: var(--aa-canvas);
+  color: var(--aa-ink-900);
+  -webkit-font-smoothing: antialiased;
+}
