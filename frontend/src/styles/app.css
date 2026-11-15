@@ -2136,9 +2136,10 @@ details ul {
   display: none;
 }
 @media (max-width: 1024px) {
-  /* Hojas de abajo: la línea de arriba (Asa) cambia su altura; paradas 25, 40, 60 y 100 % del área del mapa */
+  /* Hojas de abajo: la línea de arriba (Asa) cambia su altura; dos posiciones por panel: resultados 25 o 75 %, ficha 40 o 100 % del área del mapa */
   .panel-left {
     height: var(--alto-res, 25%);
+    transition: height 0.25s var(--ease);
   }
   .map-credit {
     bottom: calc(var(--alto-res, 25%) + var(--s-2));
@@ -2161,6 +2162,7 @@ details ul {
   .panel-right {
     top: auto;
     height: var(--alto-ficha, 40%);
+    transition: height 0.25s var(--ease);
     border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
   .asa {
@@ -2243,5 +2245,11 @@ details ul {
     bottom: auto;
     top: 156px; /* debajo del crédito, que en la vista del lugar sube y ocupa hasta 3 líneas */
     height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel-left,
+  .panel-right {
+    transition: none;
   }
 }

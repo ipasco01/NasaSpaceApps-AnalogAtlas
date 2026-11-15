@@ -206,7 +206,7 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
   return (
     <>
       <aside className="panel panel-right" aria-labelledby="ficha-t" style={{ "--alto-ficha": alto }}>
-        <Asa alto={alto} setAlto={setAlto} variable="--alto-ficha" en=".panel" etiqueta="Drag or tap to resize the place card" />
+        <Asa alto={alto} setAlto={setAlto} cerrado="40%" abierto="100%" variable="--alto-ficha" en=".panel" etiqueta="Drag or tap to resize the place card" />
         <div className="panel-body" style={{ padding: 0, gap: 0 }}>
           <div className="place-hero">
             <div className="side-mini">
