@@ -1,283 +1,114 @@
-/* src/styles/ficha.css */
+cat > src/components/PlaceCard.jsx << 'EOF'
+import { useState } from "react";
 
-.aa-ficha {
-  background: #0f172a;
-  color: #f8fafc;
-  padding: 2rem;
-  font-family: "Inter", system-ui, sans-serif;
-}
+const VARIABLE_NAMES = {
+  ndvi: "No vegetation",
+  arido: "Barren ground",
+  pendiente: "Slope",
+  rango_termico: "Day-night swing",
+  temp_dia: "Day temperature",
+  temp_noche: "Night temperature",
+};
 
-.aa-ficha-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
+const TRAMOS_EN = {
+  "Muy buen análogo": "Strong analog",
+  "Bueno": "Good analog",
+  "Parcial": "Partial analog",
+  "Débil": "Weak analog",
+};
 
-.aa-breadcrumbs {
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #94a3b8;
-}
+const LIMITES_FISICOS = {
+  marte: [
+    { label: "Gravity", mars: "0.379 g", earth: "1 g" },
+    { label: "Air pressure", mars: "~0.63%", earth: "of Earth's" },
+    { label: "Surface radiation", mars: "~0.67 mSv/day", earth: "far above Earth" },
+  ],
+  luna: [
+    { label: "Gravity", moon: "0.165 g", earth: "1 g" },
+    { label: "Air pressure", moon: "vacuum", earth: "1 atm" },
+    { label: "Surface radiation", moon: "~1.3 mSv/day", earth: "far above Earth" },
+  ],
+};
 
-.aa-breadcrumbs span:not(:last-child)::after {
-  content: "›";
-  margin-left: 0.5rem;
-}
+export default function PlaceCard({ cell, cuerpo, sitio, onClose }) {
+  const [wipe, setWipe] = useState(50);
+  const seParece = cell.se_parece || [];
+  const falla = cell.falla || [];
+  const limites = LIMITES_FISICOS[cuerpo] || [];
+  const tramoEn = TRAMOS_EN[cell.tramo] || cell.tramo;
 
-.aa-close {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
+  const matches = Object.entries(cell.desglose || {}).filter(([_, v]) => v >= 0.75).sort((a, b) => b[1] - a[1]);
+  const breaks = Object.entries(cell.desglose || {}).filter(([_, v]) => v < 0.5).sort((a, b) => a[1] - b[1]);
 
-.aa-score-header {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
+  return (
+    <div className="aa-ficha">
+      <div className="aa-ficha-header">
+        <div className="aa-breadcrumbs">
+          <span>{sitio}, {cuerpo}</span>
+          <span>›</span>
+          <span>{cell.lat.toFixed(2)}° {cell.lat >= 0 ? "N" : "S"}, {cell.lon.toFixed(2)}° {cell.lon >= 0 ? "E" : "W"}</span>
+        </div>
+        <button onClick={onClose} className="aa-close">✕</button>
+      </div>
 
-.aa-score-num {
-  font-size: 4rem;
-  font-weight: 700;
-  color: #f8fafc;
-}
+      <div className="aa-score-header">
+        <span className="aa-score-num">{cell.puntaje}</span>
+        <span className="aa-score-text">{tramoEn}</span>
+      </div>
 
-.aa-score-text {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
+      <div className="aa-ficha-body">
+        <div className="aa-compare">
+          <div className="aa-compare-imgs">
+            <div className="aa-compare-base" style={{ background: "#2d5016" }} />
+            <div className="aa-compare-top" style={{ clipPath: `inset(0 ${100 - wipe}% 0 0)`, background: "#8b4513" }} />
+          </div>
+          <div className="aa-compare-labels"><span>20 km</span><span>20 km</span></div>
+          <div className="aa-compare-corners"><span>Earth</span><span>{cuerpo === "marte" ? "Mars" : "Moon"}</span></div>
+          <input type="range" min="0" max="100" value={wipe} onChange={(e) => setWipe(e.target.value)} className="aa-compare-slider" />
+        </div>
 
-.aa-score-sub {
-  font-size: 0.875rem;
-  color: #94a3b8;
-}
+        <div className="aa-bars-section">
+          <h3>Similarity by variable</h3>
+          {Object.entries(cell.desglose || {}).map(([k, v]) => (
+            <div className="aa-bar-row" key={k}>
+              <span className="aa-bar-label">{VARIABLE_NAMES[k] || k}</span>
+              <div className="aa-bar-track"><div className="aa-bar-fill" style={{ width: `${v * 100}%` }} /></div>
+              <span className="aa-bar-value">{Math.round(v * 100)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-.aa-ficha-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
+      <div className="aa-matches-breaks">
+        <div className="aa-matches">
+          <h3>Matches</h3>
+          {matches.map(([k, v]) => (
+            <div className="aa-match-row" key={k}><span>{VARIABLE_NAMES[k] || k}</span><span>{Math.round(v * 100)}</span></div>
+          ))}
+        </div>
+        <div className="aa-breaks">
+          <h3>Breaks the analogy</h3>
+          {breaks.map(([k, v]) => (
+            <div className="aa-break-row" key={k}><span>{VARIABLE_NAMES[k] || k}</span><span className="aa-break-value">{Math.round(v * 100)}</span></div>
+          ))}
+        </div>
+      </div>
 
-.aa-compare {
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 8px;
-}
+      <div className="aa-limites">
+        <h2>What no place on Earth reproduces</h2>
+        <div className="aa-limites-list">
+          {limites.map((l) => (
+            <div className="aa-limite-row" key={l.label}>
+              <span className="aa-limite-label">{l.label}</span>
+              <span className="aa-limite-mars">{l.mars || l.moon}</span>
+              <span className="aa-limite-earth">{l.earth}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-.aa-compare-imgs {
-  position: relative;
-  width: 100%;
-  height: 100%;
+      <div className="aa-fuentes">Earth view 120 km wide: Sentinel-2 cloudless 2021 (EOX). Reference: Viking MDIM 2.1, NASA Mars Trek.</div>
+    </div>
+  );
 }
-
-.aa-compare-base,
-.aa-compare-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.aa-compare-handle {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #f8fafc;
-  transform: translateX(-50%);
-}
-
-.aa-handle-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  background: #f8fafc;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #0f172a;
-  font-weight: 700;
-}
-
-.aa-compare-labels {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  right: 1rem;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: #f8fafc;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-}
-
-.aa-compare-corners {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: #f8fafc;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-}
-
-.aa-compare-slider {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: ew-resize;
-}
-
-.aa-bars-section h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #f8fafc;
-}
-
-.aa-bar-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.aa-bar-label {
-  flex: 1;
-  font-size: 0.875rem;
-  color: #cbd5e1;
-}
-
-.aa-bar-track {
-  width: 120px;
-  height: 8px;
-  background: #1e293b;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.aa-bar-fill {
-  height: 100%;
-  background: #06b6d4;
-  border-radius: 4px;
-}
-
-.aa-bar-value {
-  width: 40px;
-  text-align: right;
-  font-size: 0.875rem;
-  color: #f8fafc;
-  font-variant-numeric: tabular-nums;
-}
-
-.aa-matches-breaks {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.aa-matches h3,
-.aa-breaks h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #f8fafc;
-}
-
-.aa-match-row,
-.aa-break-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #1e293b;
-  font-size: 0.875rem;
-}
-
-.aa-break-value {
-  font-weight: 700;
-  color: #f8fafc;
-}
-
-.aa-limites {
-  margin-bottom: 2rem;
-}
-
-.aa-limites h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #f8fafc;
-}
-
-.aa-limites-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.aa-limite-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #1e293b;
-  font-size: 0.875rem;
-}
-
-.aa-limite-label {
-  color: #cbd5e1;
-}
-
-.aa-limite-mars {
-  color: #f8fafc;
-  font-weight: 600;
-}
-
-.aa-limite-earth {
-  color: #94a3b8;
-}
-
-.aa-fuentes {
-  font-size: 0.75rem;
-  color: #64748b;
-  margin-bottom: 1.5rem;
-}
-
-.aa-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.aa-actions button {
-  background: #1e293b;
-  color: #f8fafc;
-  border: 1px solid #334155;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-}
-
-.aa-actions button:hover {
-  background: #334155;
-}
+EOF
