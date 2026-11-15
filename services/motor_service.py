@@ -18,7 +18,11 @@ from backend.motor import (
 )
 
 logger = logging.getLogger(__name__)
-
+# Dentro de MotorService.buscar, al final, antes del return:
+#   total_match = cuántas celdas tienen puntaje >= 50 (tramo "Bueno" o superior).
+umbral = 50.0
+total_match = int((salida["puntaje"] >= umbral).sum())
+return lugares, saturadas, total_match
 
 class MotorService:
     """Fachada de alto nivel sobre backend/motor.py para la capa de API."""
