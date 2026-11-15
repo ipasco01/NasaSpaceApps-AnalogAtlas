@@ -3,6 +3,7 @@
 // Paso 4: ficha del lugar. Un solo puntaje; "View as" cambia qué se muestra primero (Educator, Researcher,
 // Mission test, Explorer). "Expand comparison" abre la Tierra y la referencia grandes, lado a lado o con deslizador.
 import { Fragment, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ICONO_VAR, LIMITES, SITIOS, VARIABLES, VISTAS, anchoVistaKm, api, coord, enGoogleMaps, fotoTierra, tramo } from "../lib/atlas.js";
 import { Cerrar } from "./Iconos.jsx";
 import Icono from "./IconosAtlas.jsx";
@@ -316,8 +317,9 @@ export default function FichaLugar({ lugar, sitio, referencia, vista, setVista, 
           </div>
         </div>
       </aside>
-      {grande && <Agrandada lugar={lugar} sitio={sitio} referencia={referencia} filas={filas} tierraNoLlega={tierraNoLlega} cerrar={() => setGrande(false)}
-        anterior={anterior} siguiente={siguiente} posicion={posicion} />}
+      {/* Portal: el modal va sobre toda la página (también sobre la cabecera), no dentro de la capa del mapa */}
+      {grande && createPortal(<Agrandada lugar={lugar} sitio={sitio} referencia={referencia} filas={filas} tierraNoLlega={tierraNoLlega}
+        cerrar={() => setGrande(false)} anterior={anterior} siguiente={siguiente} posicion={posicion} />, document.body)}
     </>
   );
 }

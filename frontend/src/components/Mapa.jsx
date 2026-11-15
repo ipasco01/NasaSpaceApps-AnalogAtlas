@@ -112,7 +112,10 @@ export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, ref
         ultimoEncuadre.current = encuadre;
         const b = new maplibregl.LngLatBounds();
         lugares.forEach((l) => b.extend([l.lon, l.lat]));
-        m.fitBounds(b, { padding: { top: 48, bottom: 48, left: window.innerWidth > 1024 ? 420 : 48, right: 48 }, maxZoom: 6, duration: 600 });
+        const ancho = window.innerWidth > 1024;
+        // En celular el panel de resultados tapa la mitad de abajo del mapa
+        m.fitBounds(b, { padding: { top: 48, bottom: ancho ? 48 : Math.round(window.innerHeight * 0.55), left: ancho ? 420 : 24, right: ancho ? 48 : 24 },
+          maxZoom: 6, duration: 600 });
       }
     };
     if (listo.current) aplicar();
