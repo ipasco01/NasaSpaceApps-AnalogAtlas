@@ -1,33 +1,45 @@
-// src/components/FilterSidebar.jsx
-// La maqueta pide sliders de rango (Slope, roughness). El contrato no tiene filtros de rango
-// ni columna "roughness". Decision del equipo: los sliders controlan el PESO relativo de la
-// variable (CU-04) y "roughness" se renombra a "Terrain contrast" mapeado a rango_termico.
-// Se documenta en la ficha para que el jurado no lo vea como incoherencia.
+cat > src/components/AskAIPanel.jsx << 'EOF'
+import { useState } from "react";
+import { interpretar, buscar } from "../lib/atlasApi.js";
 
-export default function FilterSidebar({ atlas }) {
-  // Mapeo UI -> variable real del contrato.
-  const MAP = {
-    slope: "pendiente",
-    terrain: "rango_termico", // proxy honesto de rugosidad termica del terreno
+export default function AskAIPanel({ atlas }) {
+  const [msg, setMsg] = useState("");
+  const [chat, setChat] = useState([]);
+
+  const send = async (texto) => {
+    setChat((c) => [...c, { role: "user", texto }]);
+    const out = await interpretar(texto);
+    setChat((c) => [...c, { role: "ai", ...out }]);
+    atlas.setSitio(out.sitio);
+    atlas.setPesos(out.pesos);
+    atlas.setDescubrimiento(out.descubrimiento);
+    const res = await buscar({ sitio: out.sitio, pesos: out.pesos, descubrimiento: out.descubrimiento, top: 10 });
+    atlas.setResult(res);
   };
 
   return (
-    <aside className="aa-sidebar">
-      <h3>Live filters</h3>
-      {Object.entries(MAP).map(([ui, varName]) => (
-        <div className="aa-filter" key={ui}>
-          <label>{ui === "slope" ? "Slope" : "Terrain contrast"}</label>
-          <input
-            type="range" min="0" max="1" step="0.05"
-            value={atlas.pesos[varName] ?? 0.1}
-            onChange={(e) => atlas.setPeso(varName, Number(e.target.value))}
-          />
-          <span className="aa-tabular">{(atlas.pesos[varName] ?? 0.1).toFixed(2)}</span>
-        </div>
-      ))}
-      <p className="aa-count">
-        <span className="aa-dot" /> Filters applied. {atlas.result?.total_match ?? 0} matches
-      </p>
-    </aside>
+    <div className="aa-ai">
+      <div className="aa-ai-head">Ask AI</div>
+      <div className="aa-ai-body">
+        {chat.map((m, i) => (
+          <div key={i} className={m.role === "user" ? "aa-ai-user" : "aa-ai-ai"}>
+            {m.role === "user" ? m.texto : m.resumen}
+            {m.pregunta && (
+              <div className="aa-chips">
+                <p className="aa-chips-q">{m.pregunta}</p>
+                {m.opciones.map((op) => (
+                  <button key={op} className="aa-chip" onClick={() => send(op)}>{op}</button>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <form className="aa-ai-form" onSubmit={(e) => { e.preventDefault(); if (msg.trim()) { send(msg); setMsg(""); } }}>
+        <input value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="Ask a follow-up..." />
+        <button type="submit" aria-label="Send">Send</button>
+      </form>
+    </div>
   );
 }
+EOF
