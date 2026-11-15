@@ -32,7 +32,32 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     logger.info("Servidor Atlas Analog listo")
     yield
     logger.info("Cerrando servidor Atlas Analog")
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
+# ... (resto de imports y lifespan igual)
+
+app = FastAPI(
+    title="Atlas Analog API",
+    description="Analogos terrestres de sitios de la Luna y Marte (NASA Space Apps 2026)",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+# CORS: permite que el frontend (Vite en :5173) llame a esta API (:8000)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+from api.routes import buscar
+app.include_router(buscar.router, prefix="/api")
 
 app = FastAPI(
     title="Atlas Analog API",
