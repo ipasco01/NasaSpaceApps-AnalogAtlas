@@ -1,31 +1,69 @@
-cat > src/styles/tokens.css << 'EOF'
-:root {
-  --aa-violet-700: #6d28d9;
-  --aa-violet-600: #7c3aed;
-  --aa-violet-500: #8b5cf6;
-  --aa-violet-300: #a78bfa;
-  --aa-violet-50:  #f5f3ff;
-  --aa-ink-900: #111827;
-  --aa-ink-700: #374151;
-  --aa-ink-500: #6b7280;
-  --aa-line:    #e5e7eb;
-  --aa-surface: #ffffff;
-  --aa-canvas:  #f9fafb;
-  --aa-tramo-alto:   #16a34a;
-  --aa-tramo-medio:  #6d28d9;
-  --aa-tramo-bajo:   #d97706;
-  --aa-tramo-debil:  #dc2626;
-  --aa-dark-bg: #0f172a;
-  --aa-dark-panel: #1e293b;
-  --aa-dark-border: #334155;
-  --aa-dark-text: #f8fafc;
-  --aa-dark-text-muted: #94a3b8;
-  --aa-dark-cyan: #06b6d4;
-  --aa-radius: 12px;
-  --aa-radius-pill: 999px;
-  --aa-shadow: 0 8px 24px rgba(17, 24, 39, 0.12);
-  --aa-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+/* Analog Atlas · frontend/src/styles/tokens.css
+   v1.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+   Copia literal de los tokens de DESIGN.md (fuente única). Si cambian allá, cambiar aquí. */
+
+:root,
+[data-theme="light"] {
+  --bg: #ffffff;
+  --surface-2: #f5f5f7;
+  --ink: #111827;
+  --muted: #4b5563;
+  --line: #e5e7eb;
+  --accent: #5b4cdb;
+  --accent-hover: #4a3cc4;
+  --accent-ink: #ffffff;
+  --accent-soft: #eeecfc;
+  --good: #15803d;
+  --bad: #b91c1c;
+  --scrim: rgba(17, 24, 39, 0.48);
+  color-scheme: light;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--aa-font); background: var(--aa-canvas); color: var(--aa-ink-900); }
-EOF
+
+[data-theme="dark"] {
+  --bg: #0b0f17;
+  --surface-2: #131a26;
+  --ink: #f8fafc;
+  --muted: #94a3b8;
+  --line: #233044;
+  --accent: #a29bfe;
+  --accent-hover: #b8b2ff;
+  --accent-ink: #0b0f17;
+  --accent-soft: #221f45;
+  --good: #4ade80;
+  --bad: #f87171;
+  --scrim: rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+
+:root {
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-full: 999px;
+  --shadow-overlay: 0 12px 32px rgba(17, 24, 39, 0.16);
+
+  --content-max: 1200px;
+  --gutter: 24px;
+  --header-h: 64px;
+  --control-h: 44px;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --t: 150ms;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --gutter: 16px;
+  }
+}

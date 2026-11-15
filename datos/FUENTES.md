@@ -16,7 +16,11 @@ Exportados desde Google Earth Engine con `data-pipeline/earth_engine_tierra.js`.
 
 **Pendiente:** se calcula en `tif_a_tabla.py` desde la elevación, con la misma fórmula que para la Luna y Marte (sobre 80° de latitud, solo la componente norte-sur).
 
-**Faltan:** `lluvia` (`NASA/GPM_L3/IMERG_MONTHLY_V07`, exportada como `atlas_analog_lluvia_gpm_v9.tif`, por bajar de Drive) y `polvo` (`NASA/GSFC/MERRA/aer/2`, en exportación v12).
+| `atlas_analog_polvo_v12.tif` | polvo (profundidad óptica del polvo a 550 nm) | `NASA/GSFC/MERRA/aer/2` banda `DUEXTTAU`, media 2022 | 331.835 celdas (99,1 %); p5 0,002, mediana 0,016, p95 0,231, máx 0,579 (Taklamakán 0,51, Bodélé 0,47, Sechura 0,05). Agregada con `data-pipeline/agregar_columna.py` |
+
+**Roca de la superficie (no NASA):** GLiM, Hartmann & Moosdorf 2012, grilla de 0,5° (PANGAEA doi:10.1594/PANGAEA.788537, CC BY 3.0, archivo `hartmann-moosdorf_2012.zip` de 38 kB). `data-pipeline/glim_a_columnas.py` crea `volcanico` (clases vb, vi, py: basaltos, andesitas, piroclastos; 4,8 % de las celdas) y `sedimento` (su, ss, sm; 44 %). 98,7 % de las celdas con dato. Comprobado: Deccan e Islandia vb, valle de Andagua (Arequipa) vi y py, Sechura su.
+
+**Falta:** `lluvia` (`NASA/GPM_L3/IMERG_MONTHLY_V07`, exportada como `atlas_analog_lluvia_gpm_v9.tif`, por bajar de Drive).
 
 **Error de exportación conocido:** las capas en cuadrícula lat/lon de 0,1° y 0,05° (GPM, MOD13C1, ERA5, MCD12C1 como banda) fallaban con `Unable to transform edge`. Se resolvió llevándolas a la proyección sinusoidal de MODIS (5 km) antes de exportar. Detalle en `data-pipeline/earth_engine_tierra.js`.
 

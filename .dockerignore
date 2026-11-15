@@ -1,0 +1,16 @@
+# Analog Atlas · .dockerignore · v1.0 · 2026-11-15
+.git
+.env
+**/__pycache__
+**/node_modules
+frontend/dist
+views/
+.streamlit/
+data-pipeline/
+datos/tierra/
+datos/planetas/
+datos/celdas_PRUEBA_no_reales.parquet
+datos.zip
+api/celda/
+*.md
+!frontend/**/*.md

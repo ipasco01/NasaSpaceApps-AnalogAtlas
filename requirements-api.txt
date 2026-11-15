@@ -1,0 +1,9 @@
+# Analog Atlas · dependencias del servidor (API + página React compilada) · v1.0 · 2026-11-15 · Isabelita (equipo Ctrl Z)
+# Versiones probadas en local el 2026-11-15. La app Streamlit vieja usa requirements.txt.
+fastapi==0.163.0
+uvicorn==0.32.1
+pydantic==2.14.3
+pandas==3.0.6
+numpy==2.5.1
+pyarrow==26.0.1
+matplotlib==3.11.2
