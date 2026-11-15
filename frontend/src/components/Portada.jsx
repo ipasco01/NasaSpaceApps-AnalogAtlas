@@ -1,10 +1,10 @@
 // Analog Atlas · frontend/src/components/Portada.jsx
-// v1.1 · 2026-11-15 · Isabelita (equipo Ctrl Z)
+// v1.2 · 2026-11-15 · Isabelita (equipo Ctrl Z) · botón al código en GitHub junto al de modo
 // Paso 1: portada a pantalla completa. Jerarquía: marca → frase → buscador (foco) → ejemplos cortos → "cómo funciona".
 // v1.1: todo cabe en el teléfono (antes la marca empujaba el contenido fuera de la pantalla), Search nunca se ve
 // deshabilitado, ejemplos en una línea y la guía como enlace discreto.
 import { useRef, useState } from "react";
-import { BotonTema, Marca } from "./Cabecera.jsx";
+import { BotonCodigo, BotonTema, Marca } from "./Cabecera.jsx";
 import { Ayuda, Lupa } from "./Iconos.jsx";
 
 const EJEMPLOS = [
@@ -24,6 +24,7 @@ export default function Portada({ buscar, cargando, error, tema, cambiarTema, ve
   return (
     <main className="landing">
       <div className="float-theme">
+        <BotonCodigo />
         <BotonTema tema={tema} cambiar={cambiarTema} />
       </div>
       <div className="landing-inner">

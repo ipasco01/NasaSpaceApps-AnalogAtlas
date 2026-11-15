@@ -1,5 +1,5 @@
 // Analog Atlas · frontend/src/components/Iconos.jsx
-// v1.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+// v1.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · ícono de código (enlace al repositorio)
 // Íconos de interfaz en trazo de 2 px: sol/luna (modo), lupa (buscar), cerrar, ayuda, enviar.
 // Los íconos de datos y acciones del equipo están en IconosAtlas.jsx (generado desde views/assets/icons).
 
@@ -10,6 +10,7 @@ const Base = ({ children, size = 20 }) => (
 
 
 export const Sol = () => <Base><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></Base>;
+export const Codigo = () => <Base><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" /></Base>;
 export const Luna = () => <Base><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></Base>;
 export const Lupa = () => <Base><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></Base>;
 export const Cerrar = () => <Base><path d="M18 6 6 18M6 6l12 12" /></Base>;

@@ -1,7 +1,9 @@
 // Analog Atlas · frontend/src/components/Cabecera.jsx
-// v1.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+// v1.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · botón al código en GitHub junto al de modo
 // Logo (vuelve al inicio), pasos numerados (los ya recorridos se pueden tocar) y botones de ayuda y modo.
-import { Ayuda, Luna, Sol } from "./Iconos.jsx";
+import { Ayuda, Codigo, Luna, Sol } from "./Iconos.jsx";
+
+const REPOSITORIO = "https://github.com/ipasco01/NasaSpaceApps-AnalogAtlas";
 
 const PASOS = ["Search", "Compare", "Explore", "Place"];
 
@@ -20,6 +22,15 @@ export function BotonTema({ tema, cambiar, clase = "btn btn-secondary btn-icon" 
     <button type="button" className={clase} onClick={cambiar} aria-label={`Switch to ${otro} mode`} title={`Switch to ${otro} mode`}>
       {tema === "light" ? <Luna /> : <Sol />}
     </button>
+  );
+}
+
+export function BotonCodigo({ clase = "btn btn-secondary btn-icon" }) {
+  return (
+    <a className={clase} href={REPOSITORIO} target="_blank" rel="noopener noreferrer"
+      aria-label="Source code on GitHub (opens in a new tab)" title="Source code on GitHub">
+      <Codigo />
+    </a>
   );
 }
 
@@ -53,6 +64,7 @@ export default function Cabecera({ paso, irA, alInicio, tema, cambiarTema, verRe
         <button type="button" className="btn btn-secondary" onClick={verRecorrido}>
           <Ayuda /> <span className="label">How it works</span>
         </button>
+        <BotonCodigo />
         <BotonTema tema={tema} cambiar={cambiarTema} />
       </div>
     </header>
