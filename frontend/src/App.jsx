@@ -179,9 +179,9 @@ export default function App() {
             conocidos={conocidos} alConocido={revisarLugar} />
           {res && (
             <aside className="panel panel-left" aria-labelledby="panel-t">
-              <Asa alto={altoRes} setAlto={setAltoRes} variable="--alto-res" en=".stage" etiqueta="Drag or tap to resize the results" />
+              <Asa alto={altoRes} setAlto={setAltoRes} cerrado="25%" abierto="75%" variable="--alto-res" en=".stage" etiqueta="Drag or tap to resize the results" />
               {altoRes === "25%" && (
-                <button type="button" className="btn btn-primary solo-movil ver-top" onClick={() => setAltoRes("60%")}>See top 10 results</button>
+                <button type="button" className="btn btn-primary solo-movil ver-top" onClick={() => setAltoRes("75%")}>See top 10 results</button>
               )}
               <div className="panel-head">
                 <div className="ref-card">

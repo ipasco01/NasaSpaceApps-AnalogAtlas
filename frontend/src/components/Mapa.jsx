@@ -1,15 +1,19 @@
 // Analog Atlas · frontend/src/components/Mapa.jsx
-// v1.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+// v1.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · relieve 3D solo en la vista del lugar, con botón para apagarlo
 // Mapa satelital a pantalla completa (Sentinel-2 cloudless, EOX) con los lugares como puntos.
 // Más opaco = más parecido. Clic en un punto abre su ficha. El teclado usa la lista de resultados.
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { CREDITO_EOX, EOX_TESELAS } from "../lib/atlas.js";
+import { CREDITO_EOX, CREDITO_RELIEVE, EOX_TESELAS, RELIEVE_TESELAS } from "../lib/atlas.js";
 
 const ESTILO = {
   version: 8,
-  sources: { eox: { type: "raster", tiles: [EOX_TESELAS], tileSize: 256, maxzoom: 14 } },
+  sources: {
+    eox: { type: "raster", tiles: [EOX_TESELAS], tileSize: 256, maxzoom: 14 },
+    // Alturas para el 3D (Terrain Tiles en AWS, formato terrarium). Solo se piden cuando el relieve está encendido.
+    relieve: { type: "raster-dem", tiles: [RELIEVE_TESELAS], tileSize: 256, encoding: "terrarium", maxzoom: 14 },
+  },
   layers: [{ id: "eox", type: "raster", source: "eox" }],
 };
 
@@ -51,6 +55,8 @@ export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, ref
   const ultimoEncuadre = useRef(null); // encuadre = id de la búsqueda: se encuadra una vez por búsqueda nueva
   const elegirRef = useRef(alElegir);
   elegirRef.current = alElegir;
+  const [tresD, setTresD] = useState(true); // relieve en la vista del lugar
+  const relieve = Boolean(elegido) && tresD;
 
   useEffect(() => {
     const m = new maplibregl.Map({ container: caja.current, style: ESTILO, center: [20, 15], zoom: 1.4,
@@ -122,17 +128,21 @@ export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, ref
     else m.once("datos-listos", aplicar);
   }, [lugares, acento, encuadre]);
 
-  // Punto elegido: resaltado y centrado
+  // Punto elegido: resaltado y centrado. Con relieve, la cámara se acerca y se inclina; sin lugar, vuelve plana.
   useEffect(() => {
     const m = mapa.current;
     const aplicar = () => {
       m.setFilter("elegido", ["==", ["get", "id"], elegido ? elegido.id : -1]);
-      if (elegido) m.easeTo({ center: [elegido.lon, elegido.lat], zoom: Math.max(m.getZoom(), 6),
-        padding: { right: window.innerWidth > 1024 ? 460 : 0, left: window.innerWidth > 1024 ? 400 : 0 }, duration: 600 });
+      m.setTerrain(relieve ? { source: "relieve", exaggeration: 1.5 } : null);
+      const ancho = window.innerWidth > 1024;
+      if (elegido) m.easeTo({ center: [elegido.lon, elegido.lat], zoom: relieve ? Math.max(m.getZoom(), 9) : Math.max(m.getZoom(), 6),
+        pitch: relieve ? 60 : 0, bearing: 0,
+        padding: { right: ancho ? 460 : 0, left: ancho ? 400 : 0, bottom: ancho ? 0 : Math.round(window.innerHeight * 0.35) }, duration: 900 });
+      else if (m.getPitch() > 0) m.easeTo({ pitch: 0, duration: 600 });
     };
     if (listo.current) aplicar();
     else m.once("datos-listos", aplicar);
-  }, [elegido]);
+  }, [elegido, relieve]);
 
   return (
     <>
@@ -141,7 +151,12 @@ export default function Mapa({ lugares, elegido, alElegir, acento, encuadre, ref
         <span><i className="dot" /> Best matches (brighter scores higher)</span>
         <span><i className="ring" /> Well-known analog sites</span>
       </div>
-      <p className="map-credit">{CREDITO_EOX}</p>
+      {elegido && (
+        <button type="button" className="btn btn-secondary map-3d" aria-pressed={tresD} onClick={() => setTresD(!tresD)}>
+          {tresD ? "3D on" : "3D off"}
+        </button>
+      )}
+      <p className="map-credit">{CREDITO_EOX}{relieve ? `. ${CREDITO_RELIEVE}` : ""}</p>
     </>
   );
 }
