@@ -1,14 +1,13 @@
-cat > frontend/src/main.jsx << 'EOF'
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-import './styles/tokens.css';
-import './styles/app.css';
-import './styles/ficha.css';
+// Analog Atlas · frontend/src/main.jsx
+// v1.0 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+import "./styles/tokens.css";
+import "./styles/app.css";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
     <App />
-  </React.StrictMode>
+  </StrictMode>,
 );
-EOF

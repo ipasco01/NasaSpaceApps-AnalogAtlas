@@ -1,0 +1,26 @@
+# Analog Atlas · docker-compose.yml · v1.0 · 2026-11-15 · Isabelita (equipo Ctrl Z)
+# Mismo esquema que los otros servicios del VPS: nginx-proxy + Let's Encrypt en la red externa "public".
+# Valores reales en un archivo .env junto a este (nunca en el repositorio); plantilla en .env.example.
+name: analog-atlas
+services:
+  analog-atlas:
+    container_name: analog-atlas
+    build:
+      context: .
+      dockerfile: Dockerfile
+    pull_policy: build
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PORT:-8087}:8000"
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST:-}
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST:-}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL:-}
+    networks:
+      - default
+      - public
+
+networks:
+  public:
+    external: true

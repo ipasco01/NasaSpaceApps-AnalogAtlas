@@ -1,5 +1,5 @@
 # Atlas Analog · motor.py
-# v0.2 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+# v0.3 · 2026-11-14 · Isabelita (equipo Ctrl Z)
 # Puntaje de parecido entre cada celda de la Tierra y un sitio de referencia de la Luna o Marte.
 #
 # Por variable k:
@@ -11,6 +11,9 @@
 # Total: media geométrica ponderada de los s_k (forma del Earth Similarity Index):
 #   una variable que falla mucho baja todo el puntaje, no se compensa con las demás.
 # Criterio imprescindible: si su s_k < 0.5, el total no pasa de 49.
+# v0.3: una temperatura a la que la Tierra no llega (paso 1) se muestra pero no entra al total: si entrara, todos
+#   los sitios terminarían buscando "lo más frío de la Tierra". Otras variables saturadas (polvo) sí entran: lo más
+#   polvoriento de la Tierra es una buena aproximación. Se suman roca volcánica y sedimento (GLiM).
 #
 # Uso: python motor.py --celdas ../datos/celdas.parquet --sitio gale [--descubrimiento] [--sensibilidad]
 
@@ -28,13 +31,15 @@ CONOCIDOS = RAIZ / "science" / "analogos_conocidos.csv"
 # v0.2: se suma temp_dia (Shackleton solo tiene máxima del día) y permafrost_proxy para la Luna.
 PESOS_BASE = {
     "marte": {"lluvia": 0.15, "ndvi": 0.15, "arido": 0.15, "rango_termico": 0.15,
-              "temp_noche": 0.10, "temp_dia": 0.10, "pendiente": 0.10, "polvo": 0.10},
+              "temp_noche": 0.10, "temp_dia": 0.10, "pendiente": 0.10, "polvo": 0.10,
+              "volcanico": 0.10, "sedimento": 0.10},
     "luna": {"lluvia": 0.10, "ndvi": 0.10, "arido": 0.10, "rango_termico": 0.15,
              "temp_noche": 0.15, "temp_dia": 0.15, "pendiente": 0.10, "hielo": 0.05,
-             "permafrost_proxy": 0.10},
+             "permafrost_proxy": 0.10, "volcanico": 0.10, "sedimento": 0.10},
 }
 # Variables de sí o no (0/1): el parecido es directo
-BINARIAS = {"arido", "hielo", "permafrost_proxy"}
+TERMICAS = {"temp_dia", "temp_noche", "rango_termico"}
+BINARIAS = {"arido", "hielo", "permafrost_proxy", "volcanico", "sedimento"}
 # Tolerancia con margen, en la unidad de cada variable
 TOLERANCIA = {"temp_dia": 3.0, "temp_noche": 3.0, "rango_termico": 3.0, "lluvia": 20.0,
               "ndvi": 0.03, "pendiente": 2.0, "nieve": 5.0, "polvo": 0.02}
@@ -76,10 +81,12 @@ def puntuar(celdas: pd.DataFrame, ref: pd.Series, pesos: dict[str, float],
     variables = [k for k in pesos if k in celdas.columns and pd.notna(ref.get(k))]
     if not variables:
         raise ValueError("Ninguna variable tiene valor de referencia y columna en la tabla de la Tierra")
-    w = np.array([pesos[k] for k in variables], dtype=float)
-    w = w / w.sum()
     s, saturadas = parecido_por_variable(celdas, ref, variables)
-    s_seguro = s.clip(lower=0.01).fillna(0.01)          # nada en cero absoluto; dato faltante cuenta como malo
+    # Las temperaturas que la Tierra no alcanza quedan fuera del total (se informan aparte)
+    en_total = [k for k in variables if not (k in saturadas and k in TERMICAS)] or variables
+    w = np.array([pesos[k] for k in en_total], dtype=float)
+    w = w / w.sum()
+    s_seguro = s[en_total].clip(lower=0.01).fillna(0.01)          # nada en cero absoluto; dato faltante cuenta como malo
     total = np.exp((np.log(s_seguro.to_numpy()) * w).sum(axis=1)) * 100
     for k in imprescindibles:
         if k in s.columns:

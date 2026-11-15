@@ -1,0 +1,13 @@
+# Analog Atlas · dependencias de la app (Streamlit Community Cloud las instala de aquí)
+streamlit>=1.40
+pandas>=2.2
+numpy>=2.0
+pyarrow>=15
+plotly>=5.24
+requests>=2.32
+# API (api/main.py)
+fastapi>=0.120
+uvicorn>=0.32
+matplotlib>=3.8
+# Solo para regenerar datos (data-pipeline/), no para la app:
+# rasterio>=1.4  earthengine-api>=1.0

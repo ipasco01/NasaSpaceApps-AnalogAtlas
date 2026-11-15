@@ -1,0 +1,8 @@
+# Analog Atlas · configuración de Streamlit · v0.2 · 2026-11-14 · Isabelita (equipo Ctrl Z)
+[theme]
+base = "light"
+primaryColor = "#5B4CDB"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false

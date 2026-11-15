@@ -1,18 +1,18 @@
-nombre,lat,lon,nota
-Desierto de Atacama (Yungay),-24.10,-70.02,Coordenadas aproximadas del sitio
-Valle de la Muerte,36.50,-117.00,Coordenadas aproximadas
-Cráter Haughton (isla Devon),75.38,-89.67,Haughton-Mars Project
-Valles Secos de McMurdo,-77.50,162.00,Coordenadas aproximadas
-Mauna Kea (Hawái),19.82,-155.47,Coordenadas aproximadas
-Islandia (centro),64.90,-18.60,Varios sitios; punto central aproximado
-Río Tinto,37.70,-6.60,Europlanet; coordenadas aproximadas
-Black Point Lava Flow,35.68,-111.44,Desert RATS (NASA); coordenadas aproximadas
-Mars Desert Research Station (Utah),38.41,-110.79,Coordenadas aproximadas
-El Pinacate,31.80,-113.50,Coordenadas aproximadas
-Lanzarote,29.00,-13.70,ESA PANGAEA; coordenadas aproximadas
-Svalbard (Bockfjorden),79.40,13.30,AMASE; coordenadas aproximadas
-Isla Axel Heiberg,79.40,-90.80,Coordenadas aproximadas
-Dallol (Danakil),14.24,40.30,Europlanet; coordenadas aproximadas
-Kangerlussuaq,67.00,-50.70,Europlanet; coordenadas aproximadas
-Makgadikgadi,-20.70,25.60,Europlanet; coordenadas aproximadas
-Cuenca de Qaidam,37.50,94.00,Estudios de análogos de Marte; coordenadas aproximadas
+nombre,lat,lon,nota,por_que,fuente_por_que
+Desierto de Atacama (Yungay),-24.10,-70.02,Coordenadas aproximadas del sitio,,
+Valle de la Muerte,36.50,-117.00,Coordenadas aproximadas,,
+Cráter Haughton (isla Devon),75.38,-89.67,Haughton-Mars Project,,
+Valles Secos de McMurdo,-77.50,162.00,Coordenadas aproximadas,,
+Mauna Kea (Hawái),19.82,-155.47,Coordenadas aproximadas,,
+Islandia (centro),64.90,-18.60,Varios sitios; punto central aproximado,Volcanic rivers and lakes used to study past habitability on Mars,"Life 2015, doi:10.3390/life5010568"
+Río Tinto,37.70,-6.60,Europlanet; coordenadas aproximadas,Acidic river rich in iron and sulfates: a geochemical and mineralogical analog of Mars,"Life 2014, doi:10.3390/life4030511"
+Black Point Lava Flow,35.68,-111.44,Desert RATS (NASA); coordenadas aproximadas,,
+Mars Desert Research Station (Utah),38.41,-110.79,Coordenadas aproximadas,,
+El Pinacate,31.80,-113.50,Coordenadas aproximadas,,
+Lanzarote,29.00,-13.70,ESA PANGAEA; coordenadas aproximadas,,
+Svalbard (Bockfjorden),79.40,13.30,AMASE; coordenadas aproximadas,,
+Isla Axel Heiberg,79.40,-90.80,Coordenadas aproximadas,"Cold, salty springs flowing through permafrost, a Mars analog for life","Frontiers in Microbiology 2017, doi:10.3389/fmicb.2017.02527"
+Dallol (Danakil),14.24,40.30,Europlanet; coordenadas aproximadas,,
+Kangerlussuaq,67.00,-50.70,Europlanet; coordenadas aproximadas,,
+Makgadikgadi,-20.70,25.60,Europlanet; coordenadas aproximadas,,
+Cuenca de Qaidam,37.50,94.00,Estudios de análogos de Marte; coordenadas aproximadas,Hyper-arid salt playa (Dalangtan) studied for life in Mars-like salty soils,"PLoS ONE 2018, doi:10.1371/journal.pone.0200949"
