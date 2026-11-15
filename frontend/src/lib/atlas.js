@@ -1,5 +1,5 @@
 // Analog Atlas · frontend/src/lib/atlas.js
-// v1.1 · 2026-11-15 · Isabelita (equipo Ctrl Z) · enlace a Google Maps en satelital plano
+// v1.2 · 2026-11-15 · Isabelita (equipo Ctrl Z) · sales, carbonatos y tubos de lava
 // Catálogos de la interfaz, cliente de la API y utilidades. Los números vienen de la API; aquí solo hay textos y
 // las fuentes de los límites físicos (NASA Fact Sheets, Hassler et al. 2014, Zhang et al. 2020).
 
@@ -25,7 +25,7 @@ export const VARIABLES = {
   ndvi: "No vegetation", arido: "Barren ground", rango_termico: "Day–night swing", temp_noche: "Night temperature",
   temp_dia: "Day temperature", pendiente: "Slope", hielo: "Surface ice", permafrost_proxy: "Frozen ground",
   lluvia: "Dryness", polvo: "Dust in the air", nieve: "Snow", elevacion: "Elevation", volcanico: "Volcanic rock",
-  sedimento: "Sedimentary ground",
+  sedimento: "Sedimentary ground", evaporita: "Salt flats", carbonato: "Carbonate rock",
 };
 
 // Ícono de cada variable (views/assets/icons, generados en components/IconosAtlas.jsx)
@@ -93,6 +93,7 @@ export const api = {
   interpretar: (texto) => post("/api/interpretar", { texto }),
   buscar: (cuerpo) => post("/api/buscar", cuerpo),
   conocidos: () => pedir("/api/conocidos"),
+  tubos: () => pedir("/api/tubos"),
   validacion: () => pedir("/api/validacion"),
   celda: (lat, lon, sitio) => pedir(`/api/celda?lat=${lat}&lon=${lon}&sitio=${encodeURIComponent(sitio)}`),
   sensibilidad: (sitio, pesos) => post("/api/sensibilidad", { sitio, pesos, n_top: 10 }),

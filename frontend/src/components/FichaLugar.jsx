@@ -1,5 +1,5 @@
 // Analog Atlas · frontend/src/components/FichaLugar.jsx
-// v2.2 · 2026-11-15 · Isabelita (equipo Ctrl Z)
+// v2.3 · 2026-11-15 · Isabelita (equipo Ctrl Z) · la roca también puede ser sal o carbonato
 // Paso 4: ficha del lugar. Un solo puntaje; "View as" cambia qué se muestra primero (Educator, Researcher,
 // Mission test, Explorer). "Expand comparison" abre la Tierra y la referencia grandes, lado a lado o con deslizador.
 // v2.2: en celular la ficha es una hoja que se arrastra con la línea de arriba (Asa); tabla de prueba con encabezados y nombres cortos.
@@ -20,7 +20,8 @@ const BUENO_PARA = { roca: (r) => [`Driving on ${r.toLowerCase()}`, "rover-mobil
   polvo: () => ["Dust on suits and moving parts", "spacesuit"], arido: () => ["Mobility on barren ground", "rover-mobility"],
   ndvi: () => ["Setting up a habitat with no vegetation in the way", "habitat"] };
 
-const roca = (v) => (v?.volcanico === 1 ? "Volcanic rock" : v?.sedimento === 1 ? "Sedimentary ground" : v?.volcanico === 0 ? "Other rock" : null);
+const roca = (v) => (v?.volcanico === 1 ? "Volcanic rock" : v?.sedimento === 1 ? "Sedimentary ground" : v?.evaporita === 1 ? "Salt flats"
+  : v?.carbonato === 1 ? "Carbonate rock" : v?.volcanico === 0 ? "Other rock" : null);
 function fmt(k, v) {
   if (v == null) return "n/a";
   if (k === "elevacion") return `${Math.round(v).toLocaleString()} m`;

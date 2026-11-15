@@ -1,5 +1,5 @@
 # Atlas Analog · services/motor_service.py
-# v0.4 · 2026-11-14 · Isabelita (equipo Ctrl Z), sobre la v0.2 de asernaque03-lab
+# v0.5 · 2026-11-15 · Isabelita (equipo Ctrl Z), sobre la v0.2 de asernaque03-lab · sales, carbonatos y tubos de lava
 """
 Servicio de negocio que delega el cálculo en el motor validado del equipo (backend/motor.py).
 No duplica la lógica de similitud: solo arma las respuestas del contrato (contrato/schema.json).
@@ -13,14 +13,14 @@ import pandas as pd
 
 from backend.motor import PESOS_BASE, cargar_referencia, lejos_de_conocidos, puntuar, sensibilidad
 from config.settings import TRAMOS
-from models.data_loader import cargar_analogos_conocidos, cargar_referencias, columnas_faltantes
+from models.data_loader import cargar_analogos_conocidos, cargar_tubos_lava, cargar_referencias, columnas_faltantes
 from services.geo import pais_de
 
 logger = logging.getLogger(__name__)
 
 # Valores crudos de la Tierra que se devuelven con cada lugar (los que la tabla tenga)
 CRUDOS = ("temp_dia", "temp_noche", "rango_termico", "pendiente", "ndvi", "nieve", "elevacion", "lluvia", "polvo",
-          "volcanico", "sedimento")
+          "volcanico", "sedimento", "evaporita", "carbonato")
 CACHE_MAX = 32              # búsquedas guardadas (cada una ~1.6 MB)
 UMBRAL_MATCH = 50.0         # contador "N matches": tramo "Bueno" o superior
 SE_PARECE, FALLA = 0.75, 0.5  # contrato: se_parece s >= 0.75; falla s < 0.5
@@ -47,6 +47,7 @@ class MotorService:
     def __init__(self, celdas: pd.DataFrame) -> None:
         self.celdas = celdas
         self.conocidos = cargar_analogos_conocidos()
+        self.tubos = cargar_tubos_lava()
         self._cache: Dict[tuple, tuple] = {}
         self._validacion = None
         logger.info("MotorService listo con %d celdas en memoria", len(celdas))
@@ -56,6 +57,11 @@ class MotorService:
         texto = lambda f, k: "" if k not in f.index or pd.isna(f[k]) else str(f[k])
         return [{"nombre": str(f["nombre"]), "lat": float(f["lat"]), "lon": float(f["lon"]), "nota": texto(f, "nota"),
                  "por_que": texto(f, "por_que"), "fuente": texto(f, "fuente_por_que")} for _, f in self.conocidos.iterrows()]
+
+    def tubos_lista(self) -> List[dict]:
+        """Tubos de lava conocidos, con por qué importan y su fuente (solo para el mapa)."""
+        return [{"nombre": str(f["nombre"]), "lat": float(f["lat"]), "lon": float(f["lon"]), "nota": str(f["nota"]),
+                 "por_que": str(f["por_que"]), "fuente": str(f["fuente_por_que"])} for _, f in self.tubos.iterrows()]
 
     def validacion(self) -> dict:
         """Prueba del método: mejor puesto (en % de la Tierra) de cada análogo famoso contra cualquiera de los sitios,

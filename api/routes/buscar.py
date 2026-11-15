@@ -1,5 +1,5 @@
 # Atlas Analog · api/routes/buscar.py
-# v0.3 · 2026-11-14 · Isabelita (equipo Ctrl Z), sobre la v0.2 de asernaque03-lab
+# v0.4 · 2026-11-15 · Isabelita (equipo Ctrl Z), sobre la v0.2 de asernaque03-lab · endpoint de tubos de lava
 """Endpoints del contrato: buscar, interpretar, referencias, celda y sensibilidad."""
 
 import logging
@@ -57,6 +57,12 @@ def referencias():
 def conocidos():
     """Análogos terrestres ya estudiados (los que oculta el modo descubrimiento)."""
     return state.servicio().conocidos_lista()
+
+
+@router.get("/tubos", response_model=List[AnalogoConocido])
+def tubos():
+    """Tubos de lava conocidos (análogos de las cuevas de la Luna y Marte); no entran al puntaje."""
+    return state.servicio().tubos_lista()
 
 
 @router.get("/validacion", response_model=Validacion)

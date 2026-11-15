@@ -661,6 +661,10 @@ a.btn {
   border: 3px solid #ffffff;
   background: rgba(255, 255, 255, 0.2);
 }
+.map-legend .tube {
+  background: #ffb020;
+  border: 2px solid #1a1206;
+}
 .known-list {
   list-style: none;
   margin: var(--s-2) 0 0;

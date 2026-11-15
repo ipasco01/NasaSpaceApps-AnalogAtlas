@@ -20,7 +20,11 @@ Exportados desde Google Earth Engine con `data-pipeline/earth_engine_tierra.js`.
 
 **Roca de la superficie (no NASA):** GLiM, Hartmann & Moosdorf 2012, grilla de 0,5° (PANGAEA doi:10.1594/PANGAEA.788537, CC BY 3.0, archivo `hartmann-moosdorf_2012.zip` de 38 kB). `data-pipeline/glim_a_columnas.py` crea `volcanico` (clases vb, vi, py: basaltos, andesitas, piroclastos; 4,8 % de las celdas) y `sedimento` (su, ss, sm; 44 %). 98,7 % de las celdas con dato. Comprobado: Deccan e Islandia vb, valle de Andagua (Arequipa) vi y py, Sechura su.
 
-**Falta:** `lluvia` (`NASA/GPM_L3/IMERG_MONTHLY_V07`, exportada como `atlas_analog_lluvia_gpm_v9.tif`, por bajar de Drive).
+**Sales y carbonatos (GLiM):** `evaporita` (clase ev, 635 celdas: Salar de Uyuni, salares de Atacama, Chott el Djerid) y `carbonato` (clase sc, 18.668 celdas: Yucatán, Nullarbor, Guilin, Alpes calizos), agregadas el 2026-11-15 con `data-pipeline/glim_a_columnas.py` v0.2. Solo filtran, no entran al puntaje. Ojo: GLiM pone Dallol, Qaidam, Makgadikgadi, Death Valley y el lago Eyre como sedimento, no como sal.
+
+**Tubos de lava:** `science/tubos_lava.csv`, 6 tubos con coordenadas y fuente; solo se muestran en el mapa.
+
+**Lluvia:** `lluvia` de `NASA/GPM_L3/IMERG_MONTHLY_V07` (mediana mensual 2018-2023 × 24 × 365, mm/año), archivo `atlas_analog_lluvia_gpm_v9.tif`, agregada el 2026-11-15 con `data-pipeline/agregar_columna.py`. 334.741 celdas (100 %); p5 0, mediana 219, p95 1.682. Comprobado: Amazonas 2.342, Londres 784, Atacama 26, Sahara 0. Ojo: el 29 % de las celdas da 0, incluida la Antártida (posible falta de dato cerca del polo).
 
 **Error de exportación conocido:** las capas en cuadrícula lat/lon de 0,1° y 0,05° (GPM, MOD13C1, ERA5, MCD12C1 como banda) fallaban con `Unable to transform edge`. Se resolvió llevándolas a la proyección sinusoidal de MODIS (5 km) antes de exportar. Detalle en `data-pipeline/earth_engine_tierra.js`.
 

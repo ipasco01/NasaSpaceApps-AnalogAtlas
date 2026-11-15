@@ -17,6 +17,7 @@ CELDS_REAL = DATA_DIR / "celdas.parquet"
 CELDS_PRUEBA = DATA_DIR / "celdas_PRUEBA_no_reales.parquet"
 REFERENCIAS_FILE = SCIENCE_DIR / "referencias.csv"
 ANALOGOS_CONOCIDOS_FILE = SCIENCE_DIR / "analogos_conocidos.csv"
+TUBOS_LAVA_FILE = SCIENCE_DIR / "tubos_lava.csv"
 
 
 def ruta_celdas() -> Path:

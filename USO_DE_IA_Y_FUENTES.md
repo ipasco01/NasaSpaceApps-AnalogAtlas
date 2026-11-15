@@ -4,7 +4,7 @@ Team Ctrl Z · NASA Space Apps Piura 2026 · Challenge: *Identify Earth Location
 
 ## 1. Use of AI
 
-The idea and the scope of Analog Atlas are the team's own. We used Claude (Anthropic) as an assistant to research background (earlier analog studies and available datasets), to help write and debug code, and to polish documentation. The team reviewed every AI output before using it: dataset IDs were checked against the official catalogs, planetary files against their PDS labels, and reference values against the papers listed below.
+The idea and the scope of Analog Atlas are the team's own. We used Claude (Anthropic) as an assistant to research background (earlier analog studies and available datasets), to help write and debug code, and to polish documentation. The interface icons (SVG files in `views/assets/icons/`) were also drawn with Claude's help, following the team's design brief; each file carries a comment saying so. The team reviewed every AI output before using it: dataset IDs were checked against the official catalogs, planetary files against their PDS labels, and reference values against the papers listed below.
 
 **Inside the product:** the "Ask" box turns a plain-language goal into filter weights. In this version it works with keyword rules, not with an AI model. The similarity scores always come from the engine described in the README.
 
@@ -17,16 +17,17 @@ The idea and the scope of Analog Atlas are the team's own. We used Claude (Anthr
 | MODIS Land Cover CMG (MCD12C1, v061) | NASA | IGBP classes 0 (water), 15 (permanent snow/ice), 16 (barren), 2022 | Land mask; barren and ice fractions |
 | MODIS Snow Cover (MOD10A1, v061) | NASA | NDSI snow cover, mean 2018-2023 | Snow cover |
 | MERRA-2 aerosols (M2T1NXAER) | NASA | Dust extinction optical thickness at 550 nm (DUEXTTAU), mean 2022 | Airborne dust similarity |
+| GPM IMERG Monthly (V07) | NASA / JAXA | Precipitation, median month 2018-2023, in mm/year | Dryness similarity (Mars and the Moon have no rain) |
 | MOLA MEGDR (4 px/deg) | NASA (PDS Geosciences) | Mars topography | Slope of Mars reference sites |
 | LOLA LDEM_4 (4 px/deg) | NASA (PDS Geosciences) | Moon topography | Slope of Moon reference sites |
 | Diviner GCP and PRP (LRO) | NASA (PDS Geosciences) | Bolometric temperature by local hour; south-pole max/mean temperature and ice stability depth | Moon reference temperatures (Marius Hills, Shackleton rim) |
 | Mars Trek (Viking MDIM 2.1) and Moon Trek (LRO WAC) | NASA | Imagery | Side-by-side visual comparison at matching scale (120 km) |
 
-**Not included yet:** precipitation from GPM IMERG Monthly V07 (NASA / JAXA) was exported but is not in this version of the Earth table, so dryness does not count in the score.
 
 **Other sources**
 - ETOPO1 (NOAA) for Earth elevation and slope.
-- GLiM, Global Lithological Map (Hartmann & Moosdorf 2012, CC BY 3.0) for the volcanic and sedimentary rock fractions.
+- GLiM, Global Lithological Map (Hartmann & Moosdorf 2012, CC BY 3.0) for volcanic rock, sediments, salt flats (evaporites) and carbonate rock.
+- Known lava tubes on the map (`science/tubos_lava.csv`): NASA BRAILLE project at Lava Beds (NASA 2019), ESA PANGAEA astronaut training in the Corona lava tube, Lanzarote (ESA 2021, 2023), Kopacz et al. 2022 (Earth and Space Science, doi:10.1029/2022EA002234), and Wikipedia pages for coordinates and lengths (Lava Beds, Craters of the Moon, Kazumura Cave, Undara, Manjanggul).
 - Sentinel-2 cloudless 2021 by EOX (contains modified Copernicus Sentinel data, CC BY-NC-SA 4.0) for Earth imagery.
 - Terrain Tiles (Mapzen, AWS Open Data; built from SRTM, ETOPO1 and other sources) for the 3D relief in the place view.
 - MEDA (Perseverance) and REMS (Curiosity) ground temperatures, via Atri et al. 2022.
