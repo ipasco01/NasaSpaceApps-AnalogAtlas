@@ -14,7 +14,22 @@ from config.settings import TRAMOS
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-
+# Si el texto es muy corto o ambiguo (heurística: < 6 palabras o sin cuerpo detectado),
+# devolver pregunta + opciones en vez de forzar un sitio. El frontend muestra los chips.
+if len(req.texto.split()) < 6 or _detectar_sitio(req.texto) is None:
+    return InterpretarOut(
+        sitio="jezero",
+        pesos=PESOS_BASE["marte"],
+        imprescindibles=[],
+        descubrimiento=False,
+        resumen="Necesito un detalle para afinar la búsqueda.",
+        pregunta="What slope range and surface roughness are you targeting?",
+        opciones=[
+            "Gentle (0-15 deg) and moderate roughness",
+            "Moderate (15-30 deg) and high roughness",
+            "Steep (30-45 deg) and very high roughness",
+        ],
+    )
 def clasificar_tramo(puntaje: float) -> str:
     """Clasifica el puntaje en tramos descriptivos según el contrato."""
     for lo, hi, nombre in TRAMOS:
