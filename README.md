@@ -1,4 +1,4 @@
-# Analog Atlas · Team Ctrl Z
+# Analog Atlas · Team Piura Ctrl Z
 
 > NASA Space Apps Challenge 2026 · Piura local event
 > Challenge: *Identify Earth Locations that Analog the Permanent Moon Base Locations and Mars*
